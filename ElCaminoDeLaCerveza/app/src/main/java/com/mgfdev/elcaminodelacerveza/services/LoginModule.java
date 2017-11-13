@@ -24,11 +24,11 @@ public class LoginModule {
         this.context = context;
     }
 
-    public boolean execute(String username, String password, String urlConnect) throws Exception{
-        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) || StringUtils.isEmpty(urlConnect)){
+    public boolean execute(String username, String password) throws Exception{
+        if (StringUtils.isEmpty(username) || StringUtils.isEmpty(password) ){
             throw (new RuntimeException("Username/Password could not be empty"));
         }
-        boolean result = service.doLogin(username, password, urlConnect);
+        boolean result = service.doLogin(username, password);
         if (result){
             credentials.clear();
             credentials.put(username, password);
@@ -42,5 +42,12 @@ public class LoginModule {
         user.setUsername(username);
         user.setPassword(password);
         serviceDao.saveUser(context, user);
+    }
+
+    public User getLoggedUser (Context ctx){
+        ServiceDao serviceDao = new ServiceDao();
+        User user = serviceDao.getLoggedUser(ctx);
+
+        return user;
     }
 }

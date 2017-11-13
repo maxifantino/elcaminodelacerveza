@@ -12,9 +12,17 @@ public class DateHelper {
 
     private final static SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
 
-    public static Date getDate (String stringDate) throws ParseException{
-       return dtFormat.parse(stringDate);
+    public static Date getDate (String stringDate){
+        Date dt;
+        try {
+            dt = dtFormat.parse(stringDate);
+        }
+        catch (Exception e) {
+            dt = new Date();
+        }
+        return dt;
     }
+
     public static String getDate (Date dt){
         return dtFormat.format(dt);
     }

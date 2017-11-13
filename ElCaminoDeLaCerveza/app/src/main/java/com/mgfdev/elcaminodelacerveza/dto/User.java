@@ -1,10 +1,12 @@
 package com.mgfdev.elcaminodelacerveza.dto;
 
+import java.io.Serializable;
+
 /**
  * Created by Maxi on 29/10/2017.
  */
 
-public class User {
+public class User implements Serializable {
 
     private int id;
     private String username;

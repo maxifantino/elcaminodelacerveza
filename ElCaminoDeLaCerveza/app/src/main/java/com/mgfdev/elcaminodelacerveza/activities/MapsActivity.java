@@ -13,6 +13,7 @@ import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import java.util.List;
+import com.mgfdev.elcaminodelacerveza.R;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

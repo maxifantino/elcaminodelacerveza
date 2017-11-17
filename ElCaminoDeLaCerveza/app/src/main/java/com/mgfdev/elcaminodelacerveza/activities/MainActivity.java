@@ -22,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         Context ctx = this.getApplicationContext();
         // check if the user was logged before
-        LoginModule module = new LoginModule();
+        LoginModule module = new LoginModule(ctx);
         User user = module.getLoggedUser(ctx);
 
         if (user != null){ // dirijo a HomeModule

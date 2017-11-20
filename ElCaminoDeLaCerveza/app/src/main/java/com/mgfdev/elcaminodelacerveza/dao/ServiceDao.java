@@ -21,12 +21,18 @@ public class ServiceDao {
     public User getLoggedUser (Context ctx){
         DataBaseHelper dbHelper = new DataBaseHelper(ctx);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor mCursor = db.query(true, "USER",new String[]{"user_id", "username", "password"},"current_user='y'",
-                null,
-                null,
-                null,
-                null,
-                null);
+		Cursor mCursor = null;
+       try{
+		    mCursor = db.query(true, "USERS",new String[]{"user_id", "username", "password"},"current_user='y'",
+				   null,
+				   null,
+				   null,
+				   null,
+				   null);
+	   }
+	   catch (Exception e){
+		   e.printStackTrace();
+	   }
         User user=null;
         while (mCursor!= null && mCursor.getCount() > 0 && mCursor.moveToNext()){
             user = new User();
@@ -70,19 +76,23 @@ public class ServiceDao {
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		// update old users
-
-        Cursor mCursor = db.rawQuery(" UPDATE USERS" +
-               "set current_user = 'n'",null) ;
+		Cursor mCursor = null;
+		try{
+			mCursor = db.rawQuery(" UPDATE USERS  set current_user = 'n'",null) ;
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 
         mCursor.close();
 
         // create new user
         ContentValues newRow = new ContentValues();
-		newRow.put("user_name", user.getUsername());
+		newRow.put("username", user.getUsername());
 		newRow.put("password", user.getPassword());
         newRow.put("current_user", "y");
 
-        db.insert("USER", null, newRow);
+        db.insert("USERS", null, newRow);
 		db.close();
 		dbHelper.close();
 	}

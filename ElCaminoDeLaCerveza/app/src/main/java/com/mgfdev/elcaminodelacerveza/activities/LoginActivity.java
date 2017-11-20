@@ -64,6 +64,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        currentActivity = this;
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.username);
         populateAutoComplete();
@@ -332,15 +333,17 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             // TODO: attempt authentication against a network service.
-
+            boolean result = false;
             try {
-                loginModule.execute(mEmail, mPassword );
+                result = loginModule.execute(mEmail, mPassword );
             } catch (Exception e) {
-                return false;
+                result =  false;
             }
             // save credentials
-            loginModule.saveCredentials(mEmail,mPassword);
-            return true;
+            if (result) {
+                loginModule.saveCredentials(mEmail,mPassword);
+            }
+            return result;
         }
 
         @Override
@@ -356,6 +359,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             } else {
                 mPasswordView.setError(getString(R.string.error_incorrect_password));
+
                 mPasswordView.requestFocus();
             }
         }

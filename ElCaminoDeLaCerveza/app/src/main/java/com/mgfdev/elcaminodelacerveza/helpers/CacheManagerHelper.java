@@ -60,7 +60,6 @@ public class CacheManagerHelper {
     }
 
     private void addbrewersToCache(List <BeerLocation> beerLocations){
-        List<BeerLocation> brewers = new ArrayList<BeerLocation>();
         createBrewerCache();
         for (BeerLocation brewer:beerLocations){
             Element element = new Element(brewer.getCraftName(),brewer);

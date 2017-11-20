@@ -1,6 +1,8 @@
 package com.mgfdev.elcaminodelacerveza.services;
 
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -11,6 +13,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
+import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
 
 import java.util.List;
 import java.util.Timer;
@@ -29,6 +32,7 @@ public class LocalizationService {
     private Timer timer;
     private CacheManagerHelper cacheManager;
     private User user;
+    private String ACTION_PROXIMITY_ALERT = "com.mgfdev.elcaminodelacerveza.ProximityAlert";
 
     private LocalizationService (){
         cacheManager = CacheManagerHelper.getInstance();
@@ -43,33 +47,22 @@ public class LocalizationService {
         return instance;
     }
 
-    public void checkLocation()
+    public void init()
     {
         LatLng latLng = null;
-        try {
-            locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
-            boolean isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            boolean isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            if (isNetworkEnabled) {
-                try{
-                    locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0,
-                            locationListenerNetwork);
-                }
-                catch (SecurityException e) {
-
-                }
+        locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        CacheManagerHelper cacheBrewers =  CacheManagerHelper.getInstance();
+        List<BeerLocation>beerLocations = cacheBrewers.getBrewers(user.getUsername(), user.getPassword());
+        for (BeerLocation item:beerLocations) {
+            Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
+            intent.putExtra("brewer", item.getCraftName());
+            PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
+            try {
+                locationManager.addProximityAlert(item.getLattitude(),
+                        item.getLongitude(), GeofencesConstants.GEOFENCE_RADIUS_IN_METERS, -1, pendingIntent);
+            }   catch (SecurityException e) {
+                    e.printStackTrace();
             }
-            if(isGPSEnabled) {
-                try {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0,
-                            locationListenerGps);
-                }
-                catch (SecurityException e) {
-
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
 
@@ -81,7 +74,6 @@ public class LocalizationService {
             locationManager.removeUpdates(this);
             locationManager.removeUpdates(locationListenerNetwork);
             // HOOK !!!!!
-            checkBrewersNear(lat, lng);
         }
 
         public void onProviderDisabled(String provider) {
@@ -102,7 +94,6 @@ public class LocalizationService {
             locationManager.removeUpdates(this);
             locationManager.removeUpdates(locationListenerGps);
             //HOOK
-            checkBrewersNear(lat, lng);
         }
 
         public void onProviderDisabled(String provider) {
@@ -115,14 +106,4 @@ public class LocalizationService {
         }
     };
 
-    private void checkBrewersNear(Double lat,Double lng){
-        List<BeerLocation> brewers = cacheManager.getBrewers(user.getUsername(), user.getPassword());
-        for (BeerLocation brewer: brewers){
-            float[] results =new float[3];
-            Location.distanceBetween(lat,lng,brewer.getLattitude(),brewer.getLongitude(),results);
-            if (results[0] <= 200){
-                // hook GSM
-            }
-        }
-    }
 }

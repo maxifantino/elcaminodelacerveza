@@ -8,6 +8,7 @@ public class BeerLocation {
     private String craftName;
     private Double lattitude;
     private Double longitude;
+    private String address;
 
     public String getCraftName() {
         return craftName;
@@ -32,4 +33,13 @@ public class BeerLocation {
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
     }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
 }

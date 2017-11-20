@@ -19,12 +19,12 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 		String userTableScript = "CREATE TABLE USERS( " +
 				"user_id" + " integer primary key autoincrement, " +
 				"username" + " string ," +
-				"password" + " string, current_user + string) )";
+				"password" + " string, current_user  string)";
 
 		String passportTableScript = "CREATE TABLE PASSPORT( " +
 				"user_id" + " integer, " +
 				"brewer" + " string, " +
-				"date_created" + " string) )";
+				"date_created" + " string )";
 
 		db.execSQL(userTableScript);
 		db.execSQL(passportTableScript);

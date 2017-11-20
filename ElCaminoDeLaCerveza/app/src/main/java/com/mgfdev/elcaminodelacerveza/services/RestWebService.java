@@ -40,12 +40,12 @@ public class RestWebService {
     }
     public String doGet (String url, Map<String, String> parameters) throws IOException {
         String queryString =( parameters!= null && !parameters.isEmpty()) ? "?" + restHelper.buildQueryString(parameters): "";
-        return doGet(url + queryString, null);
+        return executeGet(url + queryString, null);
     }
 
     public String doGet (String url,  Map<String, String> parameters, Map<String, String> authParams) throws IOException {
         String queryString =( parameters!= null && !parameters.isEmpty()) ? "?" + restHelper.buildQueryString(parameters): "";
-        return doGet(url + queryString, authParams);
+        return executeGet(url + queryString, authParams);
     }
 
     public String doPost (String url, Map<String, String> parameters) throws IOException{

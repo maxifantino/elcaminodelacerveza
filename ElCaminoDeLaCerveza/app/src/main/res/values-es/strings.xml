@@ -6,16 +6,15 @@
     <string name="title_activity_login">Ingresar en tu cuenta</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
+    <string name="prompt_email">Nombre de usuario o dirección de correo electrónico</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Acceder</string>
+    <string name="action_sign_in_short">Inicia Sesión</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_incorrect_password">La contraseña es incorrecta. Si sos nuevo, registrate  <a href="https://www.elcaminodelacerveza.com">aqui</a> </string>
     <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
+    <string name="permission_rationale">"Los permisos para acceder a tus contactos son necesarios para el autocompletar"
     </string>
     <string name="title_activity_settings">Settings</string>
     <string name="brewer_not_found_title">Cerveceria no encontrada</string>

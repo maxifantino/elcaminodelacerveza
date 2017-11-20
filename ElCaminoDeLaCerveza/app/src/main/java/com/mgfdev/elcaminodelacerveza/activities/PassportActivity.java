@@ -72,6 +72,8 @@ public class PassportActivity extends AppCompatActivity {
         passport.addBrewer(brewer);
         ServiceDao dao = new ServiceDao();
         dao.savePassportItem(ctx, user.getId(), brewer);
+
+
     }
 
     private void showErrorMessage(String brewerName){

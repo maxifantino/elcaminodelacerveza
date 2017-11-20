@@ -1,5 +1,6 @@
 package com.mgfdev.elcaminodelacerveza.services;
 
+import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 
 import java.util.List;
@@ -10,8 +11,12 @@ import java.util.List;
 
 public class BrewerHelperService {
     public boolean isValidBrewer (String brewer, String username, String password){
-        boolean result = false;
-        List<String> brewers = CacheManagerHelper.getBrewers(username, password);
-        return brewers.contains(brewer);
+        List<BeerLocation> brewerlies = CacheManagerHelper.getInstance().getBrewers(username, password);
+        for (BeerLocation location: brewerlies) {
+            if (location.getCraftName() != null && location.getCraftName().equals(brewer)){
+                return true;
+            }
+        }
+        return false;
     }
 }

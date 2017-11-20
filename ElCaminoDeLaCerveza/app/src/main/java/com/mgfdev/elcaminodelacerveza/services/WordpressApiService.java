@@ -19,7 +19,8 @@ import java.util.Map;
 
 public class WordpressApiService {
 
-    private static final String LOGIN_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/login?username={0}password={1}";
+    private static final String LOGIN_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/login?username={0}&password={1}";
+    private static final String BREWERS_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/getbrewers";
     private RestWebService restService;
 
     public WordpressApiService(){
@@ -48,16 +49,13 @@ public class WordpressApiService {
         }
         return result;
     }*/
-    public List<BeerLocation> getBeerLocations (String user, String password){
+    public List<BeerLocation> getBeerLocations (){
         List<BeerLocation> locations = new ArrayList<>();
         String beerJson;
         try {
-            def params = restService.getAuthenticationMap(user, password);
-            beerJson = restService.doGet(formattedUrl, params);
-            JsonElement yourJson = mapping.get("servers");
-            Type listType = new TypeToken<List<String>>() {}.getType();
-
-            List<String> yourList = new Gson().fromJson(yourJson, listType);
+            beerJson = restService.doGet(BREWERS_URL, null);
+            TypeToken<List<BeerLocation>> token = new TypeToken<List<BeerLocation>>(){};
+            List<BeerLocation> personList = new Gson().fromJson(beerJson, token.getType());
         }
         catch (Exception e){
             e.printStackTrace();

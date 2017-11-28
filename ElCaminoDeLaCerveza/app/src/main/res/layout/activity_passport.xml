@@ -1,17 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/map">
+    tools:context="com.mgfdev.elcaminodelacerveza.activities.PassportActivity">
+<TextView
+    android:text="HHHOOOLLAAAAAAAAAA">
 
-    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context="com.mgfdev.elcaminodelacerveza.activities.PassportActivity">
-
-    </android.support.constraint.ConstraintLayout>
-</fragment>
+</TextView>
+</android.support.constraint.ConstraintLayout>

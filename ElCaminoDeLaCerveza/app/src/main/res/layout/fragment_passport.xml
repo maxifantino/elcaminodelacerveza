@@ -1,13 +1,21 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context="com.mgfdev.elcaminodelacerveza.activities.PassportFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
 
+    <android.support.v7.widget.ListViewCompat
+        android:layout_width="wrap_content"
+        android:id="@+id/passportListView"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.ListViewCompat>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/addBrewer"
+        android:text="@string/scan_button_text"/>
 </FrameLayout>

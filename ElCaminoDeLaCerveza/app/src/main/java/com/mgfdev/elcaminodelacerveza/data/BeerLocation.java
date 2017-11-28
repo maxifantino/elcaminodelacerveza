@@ -5,25 +5,25 @@ package com.mgfdev.elcaminodelacerveza.data;
  */
 
 public class BeerLocation {
-    private String craftName;
-    private Double lattitude;
+    private String brewery;
+    private Double latitude;
     private Double longitude;
     private String address;
 
-    public String getCraftName() {
-        return craftName;
+    public String getBrewery() {
+        return brewery;
     }
 
-    public void setCraftName(String craftName) {
-        this.craftName = craftName;
+    public void setBrewery(String brewery) {
+        this.brewery = brewery;
     }
 
-    public Double getLattitude() {
-        return lattitude;
+    public Double getLatitude() {
+        return latitude;
     }
 
-    public void setLattitude(Double lattitude) {
-        this.lattitude = lattitude;
+    public void setLatitude(Double lattitude) {
+        this.latitude = lattitude;
     }
 
     public Double getLongitude() {

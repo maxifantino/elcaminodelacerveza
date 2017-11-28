@@ -3,7 +3,6 @@ package com.mgfdev.elcaminodelacerveza.services;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -55,10 +54,10 @@ public class LocalizationService {
         List<BeerLocation>beerLocations = cacheBrewers.getBrewers(user.getUsername(), user.getPassword());
         for (BeerLocation item:beerLocations) {
             Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
-            intent.putExtra("brewer", item.getCraftName());
+            intent.putExtra("brewer", item.getBrewery());
             PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
             try {
-                locationManager.addProximityAlert(item.getLattitude(),
+                locationManager.addProximityAlert(item.getLatitude(),
                         item.getLongitude(), GeofencesConstants.GEOFENCE_RADIUS_IN_METERS, -1, pendingIntent);
             }   catch (SecurityException e) {
                     e.printStackTrace();

@@ -8,6 +8,8 @@ import android.os.Build;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ListViewCompat;
+import android.widget.ArrayAdapter;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
@@ -15,12 +17,19 @@ import com.mgfdev.elcaminodelacerveza.dto.Passport;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.services.BrewerHelperService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PassportActivity extends AppCompatActivity {
 
     private static final int QR_CODE_SCAN = 1;
     private Passport passport;
     private User user;
     private Context ctx;
+    private ListViewCompat passportList;
+    private List<String> passportStringList;
+    private ArrayAdapter<String> adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +37,17 @@ public class PassportActivity extends AppCompatActivity {
         user = (User) getIntent().getSerializableExtra("USER");
         ctx = this.getApplicationContext();
         passport = loadPassport(user);
+        populatePassportList(passport);
+    }
+
+    private void populatePassportList (Passport passport){
+        passportStringList = new ArrayList<String>();
+        for (String brewer : passport.getBrewers().keySet()){
+            passportStringList.add (brewer);
+        }
+        adapter=new ArrayAdapter<String>(this,
+                android.R.layout.simple_list_item_1,
+                passportStringList);
     }
 
     private Passport loadPassport(User user){
@@ -63,6 +83,9 @@ public class PassportActivity extends AppCompatActivity {
         BrewerHelperService helperService = new BrewerHelperService();
         if (helperService.isValidBrewer(brewerResult, user.getUsername(), user.getPassword())){
             addBrewerToPassport(brewerResult);
+            passportStringList.add(brewerResult);
+            adapter.notifyDataSetChanged();
+
         } else{
             showErrorMessage(brewerResult);
         }
@@ -72,8 +95,6 @@ public class PassportActivity extends AppCompatActivity {
         passport.addBrewer(brewer);
         ServiceDao dao = new ServiceDao();
         dao.savePassportItem(ctx, user.getId(), brewer);
-
-
     }
 
     private void showErrorMessage(String brewerName){

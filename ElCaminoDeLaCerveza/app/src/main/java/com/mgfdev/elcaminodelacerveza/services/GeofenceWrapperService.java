@@ -35,8 +35,8 @@ public class GeofenceWrapperService {
         List<BeerLocation>beerLocations = cacheBrewers.getBrewers(username, password);
         for (BeerLocation beerlocation: beerLocations){
             geofences.add(new Geofence.Builder()
-                    .setRequestId(beerlocation.getCraftName())
-                    .setCircularRegion(beerlocation.getLattitude(), beerlocation.getLongitude(), GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)
+                    .setRequestId(beerlocation.getBrewery())
+                    .setCircularRegion(beerlocation.getLatitude(), beerlocation.getLongitude(), GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)
                     .setExpirationDuration(GeofencesConstants.GEOFENCE_EXPIRATION_IN_MILLISECONDS)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
                     .build());

@@ -20,7 +20,7 @@ import java.util.Map;
 public class WordpressApiService {
 
     private static final String LOGIN_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/login?username={0}&password={1}";
-    private static final String BREWERS_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/getbrewers";
+    private static final String BREWERS_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/breweries";
     private RestWebService restService;
 
     public WordpressApiService(){
@@ -55,9 +55,10 @@ public class WordpressApiService {
         try {
             beerJson = restService.doGet(BREWERS_URL, null);
             TypeToken<List<BeerLocation>> token = new TypeToken<List<BeerLocation>>(){};
-            List<BeerLocation> personList = new Gson().fromJson(beerJson, token.getType());
+            locations = new Gson().fromJson(beerJson, token.getType());
         }
-        catch (Exception e){
+        catch (Exception
+                e){
             e.printStackTrace();
         }
         return locations;

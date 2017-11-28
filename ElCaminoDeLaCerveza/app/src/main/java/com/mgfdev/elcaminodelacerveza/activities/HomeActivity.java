@@ -3,8 +3,10 @@ package com.mgfdev.elcaminodelacerveza.activities;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -25,10 +27,7 @@ import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import java.util.List;
 
-public class HomeActivity extends AppCompatActivity implements OnMapReadyCallback {
-
-    private TextView mTextMessage;
-    private GoogleMap mMap;
+public class HomeActivity extends FragmentActivity{
 
     private LocalizationService localizationService;
     private User user;
@@ -37,53 +36,52 @@ public class HomeActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            View layout;
+            boolean result = false;
+            setAllLayoutsInvisible();
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
+                    layout = findViewById(R.id.mapsLayout);
+                    layout.setVisibility(View.VISIBLE);
+                    result= true; break;
+                case R.id.navigation_passport:
+                    layout = findViewById(R.id.passportLayout);
+                    layout.setVisibility(View.VISIBLE);
+                    result= true; break;
+                case R.id.navigation_settings:
+                    layout = findViewById(R.id.settingsLayout);
+                    layout.setVisibility(View.VISIBLE);
+                    result= true; break;
             }
-            return false;
+            return result;
         }
-
     };
+
+    public User getUser(){
+        return user;
+    }
+
+    private void setAllLayoutsInvisible(){
+        View layoutSeetings = findViewById(R.id.settingsLayout);
+        layoutSeetings.setVisibility(View.INVISIBLE);
+        View mapsLayout = findViewById(R.id.mapsLayout);
+        mapsLayout.setVisibility(View.INVISIBLE);
+        View passportLayout = findViewById(R.id.passportLayout);
+        passportLayout.setVisibility(View.INVISIBLE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         user = (User) getIntent().getSerializableExtra("USER");
-
    //     setupLocalizationService();
     }
 
     private void setupLocalizationService(){
         localizationService = LocalizationService.getInstance(this.getApplicationContext(), user);
         localizationService.init();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        mMap = googleMap;
-
-        // get all brewers location;
-        WordpressApiService apiService = new WordpressApiService();
-        List<BeerLocation> brewersLocation = apiService.getBeerLocations();
-
-        for (BeerLocation location:brewersLocation) {
-            LatLng currentLatLng = new LatLng(location.getLattitude(), location.getLongitude());
-            mMap.addMarker(new MarkerOptions().position(currentLatLng).title(location.getCraftName()));
-        }
-        LatLng camaraLatLong = new LatLng(34.364, 58.223);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(camaraLatLong));
-
     }
 }

@@ -2,9 +2,7 @@ package com.mgfdev.elcaminodelacerveza.helpers;
 
 import android.os.AsyncTask;
 
-import com.mgfdev.elcaminodelacerveza.activities.OnPostExecuteInterface;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
-import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -31,18 +29,25 @@ public class CacheManagerHelper {
         return instance;
     }
 
-    private  void createBrewerCache(List <BeerLocation> beerLocations) {
-        CacheAsyncTask createCacheAsync = new CacheAsyncTask(beerLocations);
-
+    public  void createBrewerCacheAsync(List <BeerLocation> beerLocations) {
+        CacheAsyncTask createCacheAsync = new CacheAsyncTask();
         createCacheAsync.execute();
     }
 
-    private void createCacheAsync(){git status
-            
+    public  void createBrewerCache() {
+        createCache();
+    }
+
+    public  void createBrewerCache(List <BeerLocation> beerLocations) {
+        createCache();
+        addbrewersToCache(beerLocations);
+    }
+
+    private void createCache(){
         CacheManager cacheManager = CacheManager.getInstance();
-        int oneDay = 24 * 60 * 60;
-        brewersCache = new Cache("name", 2000, false, false, oneDay, oneDay);
-        cacheManager.addCache(brewersCache);
+        int twoDays = 2 * 24 * 60 * 60;
+        brewersCache = new Cache("name", 2000, false, false, twoDays, twoDays);
+        brewersCache.initialise();
     }
 
     public List<BeerLocation> getBrewers() {
@@ -68,11 +73,14 @@ public class CacheManagerHelper {
     }
 
     public void addbrewersToCache(List <BeerLocation> beerLocations){
-        for (BeerLocation location: beerLocations) {
-            Element singleElement = new Element(location.getBrewery(), location);
-//// VER ACA QUE mIERDA PASO. no lo creo el hijo de re mil putas.
-
-            brewersCache.put(singleElement, false);
+        if (brewersCache != null){
+            for (BeerLocation location: beerLocations) {
+                Element singleElement = new Element(location.getBrewery(), location);
+                brewersCache.put(singleElement, false);
+            }
+        }
+        else{
+            createBrewerCacheAsync(beerLocations);
         }
     }
 
@@ -83,17 +91,22 @@ public class CacheManagerHelper {
             this.beerLocations = beerLocations;
         }
 
-        @Override
+        public CacheAsyncTask () {
+
+        }
+            @Override
         protected Void doInBackground(Void... aVoid) {
-            createCacheAsync();
+            createCache();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            for (BeerLocation brewer:beerLocations){
-                Element element = new Element(brewer.getBrewery(),brewer);
-                brewersCache.put(element);
+            if (beerLocations != null){
+                for (BeerLocation brewer:beerLocations){
+                    Element element = new Element(brewer.getBrewery(),brewer);
+                    brewersCache.put(element);
+                }
             }
         }
     }

@@ -23,9 +23,8 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        cacheHelper = CacheManagerHelper.getInstance();
         ctx = this.getApplicationContext();
+        cacheHelper = CacheManagerHelper.getInstance();
         if (cacheHelper.getBrewers() == null) {
             Runnable r = new Runnable() {
                 @Override
@@ -35,11 +34,19 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
             };
             r.run();
         }
+        else {
+            inflateLayout ();
+        }
+    }
+
+    private void inflateLayout (){
+        setContentView(R.layout.activity_main);
     }
 
     private void populateCache (){
         BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
         breweriesAsyncService.execute((Void) null);
+
     }
 
     private void redirectLogin(Context ctx){
@@ -59,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
     @Override
     public void onTaskCompleted(Object result) {
         List<BeerLocation> breweries = (List<BeerLocation>)result;
-        cacheHelper.addbrewersToCache(breweries);
+        inflateLayout();
         redirectLogin(ctx);
     }
 }

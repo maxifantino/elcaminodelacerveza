@@ -21,7 +21,7 @@ import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 import java.util.List;
 import com.mgfdev.elcaminodelacerveza.R;
 
-public class MapsActivity extends Fragment implements OnPostExecuteInterface{
+public class MapsActivity extends Fragment{
 
     private GoogleMap googleMap;
     private MapView mMapView;
@@ -54,23 +54,12 @@ public class MapsActivity extends Fragment implements OnPostExecuteInterface{
         });
     }
 
-    private void drawMap(GoogleMap gMap){
+    private void drawMap(GoogleMap gMap) {
         googleMap = gMap;
         // get all brewers location;
         CacheManagerHelper cacheHelper = CacheManagerHelper.getInstance();
         List<BeerLocation> brewersLocation = cacheHelper.getBrewers();
-        if (brewersLocation == null){
-            populateCache();
-        }
-        else {
-            renderMap(brewersLocation);
-        }
-    }
-
-    @WorkerThread
-    private void populateCache (){
-        BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
-        breweriesAsyncService.doInBackground(null);
+        renderMap(brewersLocation);
     }
 
     private void renderMap(List <BeerLocation> brewersLocation){
@@ -78,8 +67,8 @@ public class MapsActivity extends Fragment implements OnPostExecuteInterface{
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             googleMap.addMarker(new MarkerOptions().position(currentLatLng).title(location.getBrewery()));
         }
-        LatLng camaraLatLong = new LatLng(34.364, 58.223);
-        googleMap.moveCamera(CameraUpdateFactory.newLatLng(camaraLatLong));
+        LatLng camaraLatLong = new LatLng(-34.364f, -58.223f);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 3.0f));
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -87,12 +76,5 @@ public class MapsActivity extends Fragment implements OnPostExecuteInterface{
         View rootView = inflater.inflate(R.layout.activity_maps, container, false);
         configGmap(rootView, savedInstanceState);
         return rootView;
-    }
-
-    @Override
-    public void onTaskCompleted(Object result) {
-        List<BeerLocation> breweries = (List<BeerLocation>)result;
-        cacheHelper.addbrewersToCache(breweries);
-        renderMap(breweries);
     }
 }

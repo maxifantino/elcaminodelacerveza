@@ -45,6 +45,7 @@ dependencies {
     compile 'com.google.android.gms:play-services-places:11.6.0'
     compile 'com.google.android.gms:play-services-nearby:11.6.0'
     compile 'com.google.android.gms:play-services-plus:11.6.0'
+    compile 'com.google.android.gms:play-services-vision:11.6.0'
     compile 'net.sf.ehcache:ehcache-core:2.4.6'
     testCompile 'junit:junit:4.12'
 }

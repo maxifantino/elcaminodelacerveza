@@ -3,6 +3,7 @@ package com.mgfdev.elcaminodelacerveza.activities;
 import android.os.AsyncTask;
 
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
+import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import java.util.List;
@@ -23,6 +24,8 @@ public class BreweriesAsyncService extends AsyncTask<Object, Object, Object> {
     protected Object doInBackground(Object... params) {
         WordpressApiService service = new WordpressApiService();
         locations = service.getBeerLocations();
+        CacheManagerHelper instance = CacheManagerHelper.getInstance();
+        instance.createBrewerCache(locations);
         return locations;
     }
 

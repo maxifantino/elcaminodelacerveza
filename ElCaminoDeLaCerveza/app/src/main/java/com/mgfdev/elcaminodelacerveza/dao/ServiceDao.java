@@ -114,7 +114,7 @@ public class ServiceDao {
 		Passport passport = new Passport();
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor mCursor = db.query(true, "PASSPORT",new String[]{"brewer", "created_date"},"user_id="+ userId,
+		Cursor mCursor = db.query(true, "PASSPORT",new String[]{"brewer", "date_created"},"user_id="+ userId,
 				null,
 				null,
 				null,

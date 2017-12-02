@@ -29,7 +29,6 @@ import java.util.List;
 
 public class HomeActivity extends FragmentActivity{
 
-    private LocalizationService localizationService;
     private User user;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -77,11 +76,7 @@ public class HomeActivity extends FragmentActivity{
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         user = (User) getIntent().getSerializableExtra("USER");
-   //     setupLocalizationService();
     }
 
-    private void setupLocalizationService(){
-        localizationService = LocalizationService.getInstance(this.getApplicationContext(), user);
-        localizationService.init();
-    }
+
 }

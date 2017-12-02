@@ -68,7 +68,7 @@ public class MapsActivity extends Fragment{
             googleMap.addMarker(new MarkerOptions().position(currentLatLng).title(location.getBrewery()));
         }
         LatLng camaraLatLong = new LatLng(-34.364f, -58.223f);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 3.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 4.0f));
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

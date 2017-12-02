@@ -37,6 +37,7 @@ import java.util.List;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -60,6 +61,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private Context context;
     private LoginModule loginModule;
     private Activity currentActivity;
+    private LocalizationService localizationService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

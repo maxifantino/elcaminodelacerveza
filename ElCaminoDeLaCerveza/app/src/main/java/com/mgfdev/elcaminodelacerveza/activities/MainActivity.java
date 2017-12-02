@@ -11,6 +11,7 @@ import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
+import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
 
     private CacheManagerHelper cacheHelper;
     private Context ctx;
+    private LocalizationService localizationService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +41,11 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
         }
     }
 
-    private void inflateLayout (){
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+        private void inflateLayout (){
         setContentView(R.layout.activity_main);
     }
 
@@ -62,11 +68,15 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
             startActivity(intent);
         }
     }
-
+    private void setupLocalizationService(){
+        localizationService = LocalizationService.getInstance(this.getApplicationContext());
+        localizationService.init();
+    }
     @Override
     public void onTaskCompleted(Object result) {
-        List<BeerLocation> breweries = (List<BeerLocation>)result;
         inflateLayout();
+        setupLocalizationService();
         redirectLogin(ctx);
     }
+
 }

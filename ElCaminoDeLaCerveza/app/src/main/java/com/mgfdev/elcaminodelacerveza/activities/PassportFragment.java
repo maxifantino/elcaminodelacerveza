@@ -1,8 +1,10 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +33,8 @@ import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
 import com.mgfdev.elcaminodelacerveza.dto.Passport;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
+import com.mgfdev.elcaminodelacerveza.provider.IntentIntegrator;
+import com.mgfdev.elcaminodelacerveza.provider.IntentResult;
 import com.mgfdev.elcaminodelacerveza.services.BrewerHelperService;
 import com.mgfdev.elcaminodelacerveza.services.PassportService;
 
@@ -47,7 +52,7 @@ import java.util.List;
  * Use the {@link PassportFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PassportFragment extends Fragment {
+public class PassportFragment extends Fragment{
     // TODO: Rename parameter arguments, choose names that match
 
     private OnFragmentInteractionListener mListener;
@@ -83,7 +88,7 @@ public class PassportFragment extends Fragment {
         passportService = new PassportService();
         ctx = getActivity().getApplicationContext();
         activity = (HomeActivity) getActivity();
-        user = activity.getUser();
+        activity.getUser();
         if (user != null){
             passport = passportService.loadPassport(ctx, user);
             populatePassportList(passport);
@@ -97,42 +102,33 @@ public class PassportFragment extends Fragment {
                 .build();
     }
 
-
-    private void processQRResult(Intent data){
-        String brewerResult = data.getStringExtra("SCAN_RESULT");
+    private void processQRResult(String brewerResult){
         BrewerHelperService helperService = new BrewerHelperService();
-        if (helperService.isValidBrewer(brewerResult, user.getUsername(), user.getPassword())){
+        if (helperService.isValidBrewer(brewerResult, activity.getUser().getUsername(), activity.getUser().getPassword())){
             addBrewerToPassport(brewerResult);
             passportStringList.add(brewerResult);
             adapter.notifyDataSetChanged();
-
         } else{
-            showErrorMessage(brewerResult);
+            MessageDialogHelper
+                    .showErrorMessage(activity,getString(R.string.brewer_not_found_title),getString(R.string.brewer_not_found_title) );
         }
     }
 
     private void addBrewerToPassport(String brewer){
+        if (passport == null){
+            populatePassport();
+        }
         passport.addBrewer(brewer);
         ServiceDao dao = new ServiceDao();
         dao.savePassportItem(ctx, user.getId(), brewer);
     }
 
-    private void showErrorMessage(String brewerName){
-        AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(ctx, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(ctx);
+    private void populatePassport (){
+        user = activity.getUser();
+        passport = passportService.loadPassport(ctx, user);
+        if (passportList == null){
+            populatePassportList(passport);
         }
-        builder.setTitle(getString(R.string.brewer_not_found_title))
-                .setMessage(java.text.MessageFormat.format(getString(R.string.brewer_not_found_title), brewerName))
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                })
-                .setIcon(android.R.drawable.ic_dialog_alert)
-                .show();
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -150,16 +146,24 @@ public class PassportFragment extends Fragment {
                 getQr();
             }
         });
-
     }
 
+    private void getQr(){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.initiateScan();
+    }
 
-    private void getQr() {
+    private void getQr2() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File imagePath = new File(ctx.getFilesDir(), "images");
+        File qrPicture = new File(imagePath, "qrcode.jpg");
+        Uri imageUri = FileProvider.getUriForFile(getContext(), BuildConfig.APPLICATION_ID + ".fileprovider", qrPicture);
+        if (ctx.checkSelfPermission(Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED) {
 
-        File photo = new File(Environment.getExternalStorageDirectory(), "picture.jpg");
-        imageUri = FileProvider.getUriForFile(ctx,
-                BuildConfig.APPLICATION_ID + ".fileprovider", photo);
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    PHOTO_REQUEST);
+        }
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, PHOTO_REQUEST);
     }
@@ -186,29 +190,13 @@ public class PassportFragment extends Fragment {
         return BitmapFactory.decodeStream(ctx.getContentResolver()
                 .openInputStream(uri), null, bmOptions);
     }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PHOTO_REQUEST && resultCode == -1) {
-            launchMediaScanIntent();
-            try {
-                Bitmap bitmap = decodeBitmapUri(ctx, imageUri);
-                if (barcodeDetector.isOperational() && bitmap != null) {
-                    Frame frame = new Frame.Builder().setBitmap(bitmap).build();
-                    SparseArray<Barcode> barcodes = barcodeDetector.detect(frame);
-                    for (int index = 0; index < barcodes.size(); index++) {
-                        Barcode code = barcodes.valueAt(index);
-                    }
-                    if (barcodes.size() == 0) {
-                        MessageDialogHelper.showErrorMessage(ctx, "Error", "Scan Failed: Found nothing to scan");
-                    }
-                } else {
-                    MessageDialogHelper.showErrorMessage(ctx, "Error", "Could not set up the detector!");
-                }
-            } catch (Exception e) {
-                MessageDialogHelper.showErrorMessage(ctx, "Error", "No se pudo cargar la imagen!");
-            }
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+        if (scanResult != null) {
+            // handle scan result
+            processQRResult(scanResult.getContents());
         }
+        // else continue with any other code you need in the metho
     }
 
     @Override

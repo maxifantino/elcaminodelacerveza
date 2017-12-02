@@ -13,7 +13,7 @@ public class BrewerHelperService {
     public boolean isValidBrewer (String brewer, String username, String password){
         List<BeerLocation> brewerlies = CacheManagerHelper.getInstance().getBrewers(username, password);
         for (BeerLocation location: brewerlies) {
-            if (location.getBrewery() != null && location.getBrewery().equals(brewer)){
+            if (location.getBrewery() != null && location.getBrewery().equalsIgnoreCase(brewer)){
                 return true;
             }
         }

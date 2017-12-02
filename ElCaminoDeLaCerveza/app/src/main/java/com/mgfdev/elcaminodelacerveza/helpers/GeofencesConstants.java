@@ -7,6 +7,6 @@ package com.mgfdev.elcaminodelacerveza.helpers;
 public class GeofencesConstants {
     //esto va a ser reemplazado por un archivo de properties actualizado por el usuario
     public static final long GEOFENCE_EXPIRATION_IN_MILLISECONDS =10 * 60 * 1000;
-    public static final float GEOFENCE_RADIUS_IN_METERS = 20;
+    public static final float GEOFENCE_RADIUS_IN_METERS = 400;
 
 }

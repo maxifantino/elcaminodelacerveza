@@ -1,19 +1,19 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.MainThread;
-import android.support.annotation.WorkerThread;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
 
 import com.mgfdev.elcaminodelacerveza.R;
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements OnPostExecuteInterface {
@@ -21,7 +21,7 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
     private CacheManagerHelper cacheHelper;
     private Context ctx;
     private LocalizationService localizationService;
-
+    private List<HomeActivity> observers = new ArrayList<HomeActivity>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,18 +41,22 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
         }
     }
 
+    public void attachObserver (HomeActivity observer){
+        observers.add(observer);
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
     }
-        private void inflateLayout (){
+
+    private void inflateLayout (){
         setContentView(R.layout.activity_main);
     }
 
     private void populateCache (){
         BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
         breweriesAsyncService.execute((Void) null);
-
     }
 
     private void redirectLogin(Context ctx){
@@ -68,15 +72,10 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
             startActivity(intent);
         }
     }
-    private void setupLocalizationService(){
-        localizationService = LocalizationService.getInstance(this.getApplicationContext());
-        localizationService.init();
-    }
+
     @Override
     public void onTaskCompleted(Object result) {
         inflateLayout();
-        setupLocalizationService();
         redirectLogin(ctx);
     }
-
 }

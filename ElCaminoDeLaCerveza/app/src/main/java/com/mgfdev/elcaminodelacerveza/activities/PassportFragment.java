@@ -52,7 +52,7 @@ import java.util.List;
  * Use the {@link PassportFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PassportFragment extends Fragment{
+public class PassportFragment extends CustomFragment{
     // TODO: Rename parameter arguments, choose names that match
 
     private OnFragmentInteractionListener mListener;

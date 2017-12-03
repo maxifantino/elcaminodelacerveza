@@ -12,6 +12,8 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
@@ -21,7 +23,7 @@ import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 import java.util.List;
 import com.mgfdev.elcaminodelacerveza.R;
 
-public class MapsActivity extends Fragment{
+public class MapsActivity extends CustomFragment{
 
     private GoogleMap googleMap;
     private MapView mMapView;
@@ -63,9 +65,11 @@ public class MapsActivity extends Fragment{
     }
 
     private void renderMap(List <BeerLocation> brewersLocation){
+        BitmapDescriptor beerIcon = BitmapDescriptorFactory.fromResource(R.drawable.icon_chop);
+
         for (BeerLocation location:brewersLocation) {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-            googleMap.addMarker(new MarkerOptions().position(currentLatLng).title(location.getBrewery()));
+            googleMap.addMarker(new MarkerOptions().position(currentLatLng).title(location.getBrewery()).icon(beerIcon));
         }
         LatLng camaraLatLong = new LatLng(-34.364f, -58.223f);
         googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 4.0f));

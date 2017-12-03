@@ -1,5 +1,8 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,9 +30,10 @@ import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import java.util.List;
 
-public class HomeActivity extends FragmentActivity{
+public class HomeActivity extends FragmentActivity implements ActionObserver{
 
     private User user;
+    private LocalizationService localizationService;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -76,7 +80,23 @@ public class HomeActivity extends FragmentActivity{
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
         user = (User) getIntent().getSerializableExtra("USER");
+        notifyAction();
     }
 
+    @Override
+    public void notifyAction() {
+        localizationService = LocalizationService.getInstance(this);
+        localizationService.init();
+        localizationService.getLocationUpdates();
+    }
 
+    @Override
+    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
+        return super.registerReceiver(receiver, filter);
+    }
+
+    @Override
+    public void unregisterReceiver(BroadcastReceiver receiver) {
+        super.unregisterReceiver(receiver);
+    }
 }

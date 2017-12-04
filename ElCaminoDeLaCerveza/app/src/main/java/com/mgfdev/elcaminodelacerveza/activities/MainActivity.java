@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity implements OnPostExecuteInte
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         ctx = this.getApplicationContext();
         cacheHelper = CacheManagerHelper.getInstance();
         if (cacheHelper.getBrewers() == null) {

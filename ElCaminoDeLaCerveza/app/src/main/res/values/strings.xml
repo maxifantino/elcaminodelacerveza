@@ -97,8 +97,8 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_passport">Pasaporte</string>
-    <string name="title_settings">Ajustes</string>
+    <string name="title_passport">Passport</string>
+    <string name="title_settings">Setup</string>
     <string name="scan_button_text">Scan</string>
 
     <!-- TODO: Remove or change this placeholder text -->

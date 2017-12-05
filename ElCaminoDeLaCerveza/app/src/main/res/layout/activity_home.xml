@@ -68,6 +68,4 @@
         android:orientation="horizontal"
         android:background="@color/header2"
         android:id="@+id/homeFooter"/>
-
-
     </LinearLayout>

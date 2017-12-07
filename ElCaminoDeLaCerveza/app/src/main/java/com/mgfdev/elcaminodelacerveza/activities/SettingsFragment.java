@@ -83,7 +83,7 @@ public class SettingsFragment extends Fragment {
         sessionDescription.setText(descriptionText);
         sessionDescription.setTextColor(ctx.getColor(R.color.lightWhite));
         sessionDescription.setTextSize(20);
-        
+
         return rootView;
     }
     private void setupLayoutViews(View rootView){

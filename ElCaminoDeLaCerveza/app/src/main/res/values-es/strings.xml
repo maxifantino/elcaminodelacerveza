@@ -108,5 +108,7 @@
     <string name="session_description">Estas registrado como {0}. Cerrar sesion?</string>
     <string name="no_session_description">No hay usuario Registrado</string>
     <string name="close_session">Sesión</string>
+    <string name="app_description">El camino de la cerveza</string>
+    <string name="loading_title">Cargando.....</string>
     <string name="close_session_message">Estás seguro que deseas cerrar la sesión actual?</string>
 </resources>

@@ -98,4 +98,15 @@
     <string name="title_passport">Pasaporte</string>
     <string name="title_settings">Ajustes</string>
     <string name="scan_button_text">Agregar</string>
+    <string name="location_title">Ubicacion</string>
+    <string name="location_description">Permite recibir notificaciones</string>
+    <string name="location_meters">Radio</string>
+    <string name="location_meters_description">Distancia en Metros</string>
+    <string name="location_time">Intervalo</string>
+    <string name="location_time_description">Tiempo en minutos entre actualizaciones</string>
+    <string name="session_title">Sesión</string>
+    <string name="session_description">Estas registrado como {0}. Cerrar sesion?</string>
+    <string name="no_session_description">No hay usuario Registrado</string>
+    <string name="close_session">Sesión</string>
+    <string name="close_session_message">Estás seguro que deseas cerrar la sesión actual?</string>
 </resources>

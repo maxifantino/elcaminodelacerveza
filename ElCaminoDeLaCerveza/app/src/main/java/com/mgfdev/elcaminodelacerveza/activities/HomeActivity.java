@@ -26,6 +26,7 @@ import com.google.android.gms.tasks.Task;
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
@@ -77,6 +78,9 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FontHelper.overrideFonts(this, findViewById(android.R.id.content)
+                , "montserrat.ttf");
+
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_home);
 

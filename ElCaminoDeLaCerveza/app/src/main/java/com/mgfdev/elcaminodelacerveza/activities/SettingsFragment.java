@@ -1,14 +1,33 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SeekBar;
+import android.widget.Switch;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
+import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
+import com.mgfdev.elcaminodelacerveza.services.LoginModule;
+import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.services.SharedPreferenceManager;
+
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,20 +40,20 @@ import com.mgfdev.elcaminodelacerveza.R;
 public class SettingsFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
-
+    private Context ctx;
+    private User user;
+    private Switch closeSessionBtn;
+    private SeekBar metersSeekBar;
+    private SeekBar timeSeekBar;
+    private TextView metersText;
+    private TextView timeText;
+    private SharedPreferenceManager sharedPreferences;
+    private HomeActivity activity;
+    private Switch locationButton;
     public SettingsFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SettingsFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static SettingsFragment newInstance(String param1, String param2) {
         SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
@@ -45,14 +64,149 @@ public class SettingsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        ctx = getContext();
+        activity = (HomeActivity) getActivity();
+        user = activity.getUser();
+        sharedPreferences = SharedPreferenceManager.getInstance(activity);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        FontHelper.overrideFonts(ctx, container
+                , "montserrat.ttf");
+        View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
+        setupLayoutViews(rootView);
+        TextView sessionDescription = (TextView) rootView.findViewById(R.id.sessionDescriptionText);
+        String descriptionText = user != null && StringUtils.isNotEmpty(user.getUsername()) ? getString(R.string.session_description) : getString(R.string.no_session_description);
+        sessionDescription.setText(descriptionText);
+        sessionDescription.setTextColor(ctx.getColor(R.color.lightWhite));
+        sessionDescription.setTextSize(20);
+        
+        return rootView;
+    }
+    private void setupLayoutViews(View rootView){
+        Map<String, String> config = getPreferencesValues();
+        setupTextViews(rootView);
+        setupCloseSessionButton(rootView);
+        setupSeekBars(rootView, config);
+        setupSwitchButtons(rootView, config);
+    }
+
+    private void setupSwitchButtons(View rootView,  Map<String, String> config){
+        locationButton = (Switch) rootView.findViewById(R.id.btnLocation);
+        locationButton.setChecked(config.get("Location") == "true");
+        locationButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                sharedPreferences.storeValue("location", locationButton.isChecked()? "true" : "false");
+            }
+        });
+    }
+
+    private void setupTextViews (View rootView){
+        metersText = (TextView) rootView.findViewById(R.id.metersText);
+        timeText = (TextView) rootView.findViewById(R.id.minsText);
+
+    }
+    private Map getPreferencesValues(){
+        Map<String, String> result = new HashMap<String, String>();
+        result.put("meters",sharedPreferences.getStringValue("meters"));
+        result.put("mins",sharedPreferences.getStringValue("mins"));
+        result.put("location",sharedPreferences.getStringValue("location"));
+
+        return result;
+    }
+
+    private void setupSeekBars(View rootView,  Map<String, String> config){
+        // get sharedPreferenceValues
+        metersSeekBar = (SeekBar) rootView.findViewById(R.id.metersSeekBar);
+        timeSeekBar= (SeekBar) rootView.findViewById(R.id.minsSeekBar);
+
+        metersSeekBar.setProgress(Integer.parseInt(config.get("meters")));
+        metersSeekBar.incrementProgressBy(50);
+
+        timeSeekBar.setProgress(Integer.parseInt(config.get("mins")));
+        timeSeekBar.incrementProgressBy(1);
+
+        metersText.setText(Integer.toString(metersSeekBar.getProgress()));
+        timeText.setText(Integer.toString(timeSeekBar.getProgress()));
+        metersSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                metersText.setText(Integer.toString(progress + 100));
+                sharedPreferences.storeValue("meters", metersText.getText().toString());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        timeSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                timeText.setText(Integer.toString(progress + 1));
+                sharedPreferences.storeValue("mins", timeText.getText().toString());
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+    }
+
+    private void setupCloseSessionButton ( View rootView){
+        closeSessionBtn = (Switch) rootView.findViewById(R.id.btnCloseSession);
+        closeSessionBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                checkCloseSession(activity, getString(R.string.close_session), getString(R.string.close_session_message));
+            }
+        });
+    }
+
+
+
+    public void checkCloseSession(Activity act, String title, String message){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(act);
+        dlgAlert.setMessage(message);
+        dlgAlert.setTitle(title);
+        dlgAlert.setPositiveButton("Salir", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                doLogout();
+                redirectLogin(ctx);
+            }
+        });
+
+        dlgAlert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                closeSessionBtn.setChecked(false);            }
+        });
+
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+
+    }
+
+    private void redirectLogin(Context ctx){
+            Intent intent = new Intent(activity, HomeActivity.class);
+            startActivity(intent);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -76,18 +230,12 @@ public class SettingsFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+    private void doLogout(){
+        LoginModule module = new LoginModule(ctx);
+        module.doLogout(ctx, user);
     }
 }

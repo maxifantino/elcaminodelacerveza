@@ -32,6 +32,7 @@ import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
 import com.mgfdev.elcaminodelacerveza.dto.Passport;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.provider.IntentIntegrator;
 import com.mgfdev.elcaminodelacerveza.provider.IntentResult;
@@ -63,14 +64,12 @@ public class PassportFragment extends CustomFragment{
     private ArrayAdapter<String> adapter;
     private static final int QR_CODE_SCAN = 1;
     private static final int PHOTO_REQUEST = 10;
-
-    private Context ctx;
     private HomeActivity activity;
     private User user;
     private BarcodeDetector barcodeDetector;
     private PassportService passportService;
     private Uri imageUri;
-
+    private Context ctx;
     public PassportFragment() {
         // Required empty public constructor
     }
@@ -88,7 +87,7 @@ public class PassportFragment extends CustomFragment{
         passportService = new PassportService();
         ctx = getActivity().getApplicationContext();
         activity = (HomeActivity) getActivity();
-        activity.getUser();
+        user = activity.getUser();
         if (user != null){
             passport = passportService.loadPassport(ctx, user);
             populatePassportList(passport);
@@ -135,7 +134,8 @@ public class PassportFragment extends CustomFragment{
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_passport, container, false);
         setupScanButton(rootView);
-
+        FontHelper.overrideFonts(ctx, container
+                , "montserrat.ttf");
         return rootView;
     }
     private void setupScanButton(View rootView){

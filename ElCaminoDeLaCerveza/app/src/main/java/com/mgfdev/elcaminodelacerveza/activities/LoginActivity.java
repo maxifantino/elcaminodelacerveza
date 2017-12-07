@@ -38,6 +38,7 @@ import java.util.List;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 
@@ -68,6 +69,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        FontHelper.overrideFonts(this, findViewById(android.R.id.content)
+                , "montserrat.ttf");
+
         setContentView(R.layout.activity_login);
         currentActivity = this;
         // Set up the login form.

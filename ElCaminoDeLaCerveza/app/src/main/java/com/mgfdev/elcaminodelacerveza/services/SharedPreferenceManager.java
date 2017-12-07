@@ -11,26 +11,26 @@ public class SharedPreferenceManager {
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private Context ctx;
+    private static SharedPreferenceManager instance;
 
+    public static SharedPreferenceManager getInstance(Context ctx){
+        if (instance == null){
+            instance = new SharedPreferenceManager(ctx);
+        }
+        return instance;
+    }
 
     public SharedPreferenceManager(Context ctx){
         this.ctx = ctx;
         pref = ctx.getSharedPreferences("config", 0);
-        editor = pref.edit();
     }
 
     public void storeValue(String key, String value){
-        editor.putString(key, value);
-        editor.commit();
+        pref.edit().putString(key, value).apply();
     }
 
     public String getStringValue(String key){
         return pref.getString(key, null);
-    }
-
-    public void removeValue(String key){
-        editor.remove(key);
-        editor.commit();
     }
 
 }

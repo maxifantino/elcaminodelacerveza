@@ -1,5 +1,6 @@
 package com.mgfdev.elcaminodelacerveza.dao;
 
+import java.text.MessageFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,6 +47,24 @@ public class ServiceDao {
         mCursor.close();
         return user;
     }
+
+    public boolean doLogout (Context ctx, User user){
+		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int result = -1;
+		String strFilter = (MessageFormat.format( "username='{0}' and password='{1}'", user.getUsername(), user.getPassword()));
+		ContentValues args = new ContentValues();
+		args.put("current_user", "n");
+		try{
+			result = db.update("titles", args, strFilter, null);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
+		db.close();
+		return result > 0 ;
+	}
 
 	public User getUser (Context ctx, String username)
 	{

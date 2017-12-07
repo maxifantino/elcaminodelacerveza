@@ -50,4 +50,9 @@ public class LoginModule {
 
         return user;
     }
+
+    public boolean doLogout(Context ctx, User user){
+        ServiceDao dao = new ServiceDao();
+        return dao.doLogout(ctx, user);
+    }
 }

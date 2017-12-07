@@ -1,5 +1,6 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
+import android.content.Context;
 import android.support.annotation.WorkerThread;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
+import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import java.util.List;
@@ -28,7 +30,7 @@ public class MapsActivity extends CustomFragment{
     private GoogleMap googleMap;
     private MapView mMapView;
     private CacheManagerHelper cacheHelper;
-
+    private Context ctx;
     public static MapsActivity newInstance (){
         MapsActivity fragment = new MapsActivity();
         return fragment;
@@ -37,6 +39,7 @@ public class MapsActivity extends CustomFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ctx = getContext();
     }
 
     private void configGmap(View rootView, Bundle savedInstanceState){
@@ -78,6 +81,9 @@ public class MapsActivity extends CustomFragment{
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View rootView = inflater.inflate(R.layout.activity_maps, container, false);
+        FontHelper.overrideFonts(ctx, container
+                , "montserrat.ttf");
+
         configGmap(rootView, savedInstanceState);
         return rootView;
     }

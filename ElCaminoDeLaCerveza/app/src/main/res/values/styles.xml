@@ -27,11 +27,11 @@
         <item name="android:layout_height">100dp</item>
     </style>
     <style name="settingsTitleStyle">
-        <item name="android:textColor">@color/darkWhite</item>
+        <item name="android:textColor">@color/titleFontColor</item>
         <item name="android:textSize">22dp</item>
     </style>
     <style name="settingsDescriptionStyle">
-        <item name="android:textColor">@color/lightWhite</item>
+        <item name="android:textColor">@color/descriptionFontColor</item>
         <item name="android:textSize">20dp</item>
     </style>
     <style name="splashTitleStyle">

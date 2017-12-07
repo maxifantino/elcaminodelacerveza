@@ -5,5 +5,5 @@ package com.mgfdev.elcaminodelacerveza.activities;
  */
 
 public interface ActionObserver {
-    public void notifyAction();
+    public void setLocationUpdates(Boolean activate);
 }

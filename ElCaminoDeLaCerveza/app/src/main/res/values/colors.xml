@@ -9,4 +9,8 @@
     <color name="header2">#452009</color>
     <color name="lightWhite">#FFFAFA</color>
     <color name="darkWhite">#F8F8FF</color>
+
+    <color name="descriptionFontColor">#050505</color>
+    <color name="titleFontColor">#000000</color>
+
 </resources>

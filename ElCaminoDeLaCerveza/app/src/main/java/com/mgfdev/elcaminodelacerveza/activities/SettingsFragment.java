@@ -103,6 +103,8 @@ public class SettingsFragment extends Fragment {
             public void onClick(View v)
             {
                 sharedPreferences.storeValue("location", locationButton.isChecked()? "true" : "false");
+                activity.setLocationUpdates(locationButton.isChecked());
+
             }
         });
     }
@@ -205,7 +207,7 @@ public class SettingsFragment extends Fragment {
     }
 
     private void redirectLogin(Context ctx){
-            Intent intent = new Intent(activity, HomeActivity.class);
+            Intent intent = new Intent(activity, LoginActivity.class);
             startActivity(intent);
     }
 

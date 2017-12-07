@@ -84,6 +84,7 @@ public class PassportFragment extends CustomFragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         passportService = new PassportService();
         ctx = getActivity().getApplicationContext();
         activity = (HomeActivity) getActivity();

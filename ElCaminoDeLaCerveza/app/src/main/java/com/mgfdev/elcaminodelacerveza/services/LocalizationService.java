@@ -43,6 +43,7 @@ public class LocalizationService {
     private LocalizationService() {
         cacheManager = CacheManagerHelper.getInstance();
     }
+    private CustomLocationListener locationListener;
 
     public static LocalizationService getInstance(FragmentActivity fragmentActivity) {
         if (instance == null) {
@@ -50,23 +51,28 @@ public class LocalizationService {
             ctx = fragmentActivity.getApplicationContext();
             localizationObserver = fragmentActivity;
             log = (TextView) fragmentActivity.findViewById(R.id.locationLog);
+
         }
         return instance;
     }
 
     public void init() {
         locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        locationListener = new CustomLocationListener();
         CacheManagerHelper cacheBrewers = CacheManagerHelper.getInstance();
         populateProximityAlerts(cacheBrewers);
         IntentFilter filter = new IntentFilter(ACTION_PROXIMITY_ALERT);
         localizationObserver.registerReceiver(new LocationUpdateReceiver(), filter);
     }
 
+    public void stop(){
+        locationManager.removeUpdates(locationListener);
+    }
     public void getLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2, 300, new CustomLocationListener());
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2, 300, locationListener);
 
     }
 

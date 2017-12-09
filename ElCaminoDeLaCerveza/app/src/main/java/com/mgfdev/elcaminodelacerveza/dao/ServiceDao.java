@@ -52,11 +52,11 @@ public class ServiceDao {
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int result = -1;
-		String strFilter = (MessageFormat.format( "username='{0}' and password='{1}'", user.getUsername(), user.getPassword()));
+		String strFilter = (MessageFormat.format( "username={0} and password={1}", "'" + user.getUsername() + "'", "'"+user.getPassword()+"'"));
 		ContentValues args = new ContentValues();
 		args.put("current_user", "n");
 		try{
-			result = db.update("titles", args, strFilter, null);
+			result = db.update("USERS", args, strFilter, null);
 		}
 		catch (Exception e){
 			e.printStackTrace();

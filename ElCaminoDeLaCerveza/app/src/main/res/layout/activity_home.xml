@@ -16,8 +16,10 @@
         android:background="@color/header2"
         android:id="@+id/homeBanner">
         <LinearLayout
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="5dp"
             android:layout_width="wrap_content"
-            android:background="@drawable/logo"
+            android:background="@drawable/logo_new"
             android:layout_height="wrap_content">
         </LinearLayout>
 
@@ -35,6 +37,7 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="10dp"
         android:layout_weight="1">
 
         <fragment android:name="com.mgfdev.elcaminodelacerveza.activities.MapsActivity"
@@ -61,6 +64,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:background="@color/header2"
+        android:background="@drawable/frame_bottom_new"
         android:id="@+id/homeFooter"/>
-    </LinearLayout>
+</LinearLayout>

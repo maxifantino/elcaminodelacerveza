@@ -1,19 +1,12 @@
 <resources>
     <string name="app_name">El Camino De La Cerveza</string>
-
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_login">Ingresar en tu cuenta</string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Nombre de usuario o dirección de correo electrónico</string>
+    <string name="prompt_email">Usuario</string>
     <string name="prompt_password">Contraseña</string>
     <string name="action_sign_in">Acceder</string>
     <string name="action_sign_in_short">Inicia Sesión</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">La contraseña es incorrecta. Si sos nuevo, registrate  <a href="https://www.elcaminodelacerveza.com">aqui</a> </string>
-    <string name="error_field_required">This field is required</string>
+    <string name="error_field_required">El usuario es obligatorio</string>
     <string name="permission_rationale">"Los permisos para acceder a tus contactos son necesarios para el autocompletar"
     </string>
     <string name="title_activity_settings">Settings</string>
@@ -122,4 +115,5 @@
     <string name="activateLocationDescription">Para poder recibir notificaciones de cervecerias cercanas, precisas activar los servicios de ubicación.</string>
     <string name="activate">Activar</string>
     <string name="exitMessage">Deseas salir de la aplicación?</string>
+    <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
 </resources>

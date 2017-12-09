@@ -24,6 +24,7 @@ xmlns:android="http://schemas.android.com/apk/res/android" package="com.mgfdev.e
     android:supportsRtl="true" android:theme="@style/Theme.AppCompat.Light.NoActionBar">
     <activity android:name=".activities.SplashActivity" android:label=""
         android:configChanges="orientation"
+        android:theme="@style/AppTheme.NoActionBar"
         android:screenOrientation="portrait">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />

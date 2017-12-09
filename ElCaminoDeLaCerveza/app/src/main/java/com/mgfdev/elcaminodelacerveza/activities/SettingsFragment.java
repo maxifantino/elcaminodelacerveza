@@ -26,6 +26,7 @@ import com.mgfdev.elcaminodelacerveza.services.SharedPreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
 
+import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -47,6 +48,8 @@ public class SettingsFragment extends Fragment {
     private SeekBar timeSeekBar;
     private TextView metersText;
     private TextView timeText;
+    private View layoutMeters;
+    private View layoutMins;
     private SharedPreferenceManager sharedPreferences;
     private HomeActivity activity;
     private Switch locationButton;
@@ -79,18 +82,20 @@ public class SettingsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.fragment_settings, container, false);
         setupLayoutViews(rootView);
         TextView sessionDescription = (TextView) rootView.findViewById(R.id.sessionDescriptionText);
-        String descriptionText = user != null && StringUtils.isNotEmpty(user.getUsername()) ? getString(R.string.session_description) : getString(R.string.no_session_description);
+        String descriptionText = user != null && StringUtils.isNotEmpty(user.getUsername()) ? MessageFormat.format(getString(R.string.session_description), user.getUsername()) : getString(R.string.no_session_description);
         sessionDescription.setText(descriptionText);
-        sessionDescription.setTextColor(ctx.getColor(R.color.lightWhite));
-        sessionDescription.setTextSize(20);
-
+        sessionDescription.setTextColor(ctx.getColor(R.color.descriptionFontColor));
+        sessionDescription.setTextSize(18);
+        layoutMeters = rootView.findViewById(R.id.metersLayout);
+        layoutMins = rootView.findViewById(R.id.minsLayout);
+        setLocationLayoutState(locationButton.isChecked());
         return rootView;
     }
     private void setupLayoutViews(View rootView){
         Map<String, String> config = getPreferencesValues();
         setupTextViews(rootView);
-        setupCloseSessionButton(rootView);
         setupSeekBars(rootView, config);
+        setupCloseSessionButton(rootView);
         setupSwitchButtons(rootView, config);
     }
 
@@ -104,9 +109,16 @@ public class SettingsFragment extends Fragment {
             {
                 sharedPreferences.storeValue("location", locationButton.isChecked()? "true" : "false");
                 activity.setLocationUpdates(locationButton.isChecked());
-
+                setLocationLayoutState (locationButton.isChecked());
             }
         });
+    }
+
+    private void setLocationLayoutState (boolean enabled){
+        layoutMeters.setEnabled(enabled);
+        layoutMins.setEnabled(enabled);
+        metersSeekBar.setEnabled(enabled);
+        timeSeekBar.setEnabled(enabled);
     }
 
     private void setupTextViews (View rootView){
@@ -175,6 +187,8 @@ public class SettingsFragment extends Fragment {
 
     private void setupCloseSessionButton ( View rootView){
         closeSessionBtn = (Switch) rootView.findViewById(R.id.btnCloseSession);
+        closeSessionBtn.setChecked(false);
+        closeSessionBtn.setEnabled(StringUtils.isNotBlank(user.getUsername()));
         closeSessionBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

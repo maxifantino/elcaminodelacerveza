@@ -2,10 +2,13 @@ package com.mgfdev.elcaminodelacerveza.activities;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.widget.ProgressBar;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.ConnectionHelper;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 
@@ -20,10 +24,11 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
 
     private ProgressBar mProgressView;
     private Context ctx;
-
+    private Activity activity;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        activity = this;
         setContentView(R.layout.activity_splash);
         ctx = this;
         mProgressView = (ProgressBar) findViewById(R.id.splash_progress);
@@ -34,12 +39,40 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
             }
         };
         r.run();
+        showProgress(true);
     }
 
     private void populateCache(){
-        BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
-        breweriesAsyncService.execute((Void) null);
+        if (ConnectionHelper.isConnected(this)){
+            BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
+            breweriesAsyncService.execute((Void) null);
+        }
+        else{
+            showConnectDialog();
+        }
     }
+
+    private void showConnectDialog(){
+        AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        dlgAlert.setMessage(getString(R.string.notConnectedMessage));
+        dlgAlert.setTitle("");
+        dlgAlert.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                populateCache();
+            }
+        });
+
+        dlgAlert.setNegativeButton(getString(R.string.cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                activity.finishAffinity();
+            }
+        });
+
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+
+    }
+
     private void showProgress(final boolean show) {
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {

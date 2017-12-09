@@ -9,7 +9,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginBottom="60dp">
+        android:layout_marginBottom="20dp">
+        <Switch
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btnLocation"/>
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -27,17 +31,14 @@
                 android:text="@string/location_description"/>
 
         </LinearLayout>
-        <Switch
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/btnLocation"/>
+
     </LinearLayout>
-
-
+    <View style="@style/Divider"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/metersLayout"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -46,7 +47,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 style="@style/settingsTitleStyle"
                 android:text="@string/location_meters"/>
 
@@ -68,11 +69,13 @@
             style="@style/settingsDescriptionStyle"
             android:id="@+id/metersText"/>
     </LinearLayout>
+    <View style="@style/Divider"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
+        android:id="@+id/minsLayout"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -81,7 +84,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 style="@style/settingsTitleStyle"
                 android:text="@string/location_time"/>
 
@@ -103,11 +106,12 @@
             style="@style/settingsTitleStyle"
             android:id="@+id/minsText"/>
     </LinearLayout>
+    <View style="@style/Divider"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="60dp"
+        android:layout_marginBottom="20dp"
         android:orientation="horizontal">
         <LinearLayout
             android:layout_width="wrap_content"
@@ -116,7 +120,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 style="@style/settingsTitleStyle"
                 android:text="@string/session_title"/>
 

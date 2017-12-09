@@ -119,4 +119,14 @@
     <string name="loading_title">Cargando.....</string>
     <string name="close_session">Sesión</string>
     <string name="close_session_message">Estás seguro que deseas cerrar la sesión actual?</string>
+    <string name="barcodeTitle">Instalar Barcode scanner?</string>
+    <string name="barcodeDescription">Esta aplicacion necesita un Lector de QR. Quieres instalarlo?</string>
+    <string name="yes"> Si</string>
+    <string name="no">No</string>
+    <string name="retry">Reintentar</string>
+    <string name="cancel">Cancelar</string>
+
+    <string name="activateLocationTitle">Activar localizacion</string>
+    <string name="activateLocationDescription">Para poder recibir notificaciones de cervecerias cercanas, precisas activar los servicios de ubicación.</string>
+    <string name="activate">Activar</string>
 </resources>

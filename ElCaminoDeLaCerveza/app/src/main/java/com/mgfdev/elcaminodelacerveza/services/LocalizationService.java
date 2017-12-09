@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Timer;
 
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 
 /**
  * Created by Maxi on 12/11/2017.
@@ -50,10 +51,26 @@ public class LocalizationService {
             instance = new LocalizationService();
             ctx = fragmentActivity.getApplicationContext();
             localizationObserver = fragmentActivity;
-            log = (TextView) fragmentActivity.findViewById(R.id.locationLog);
-
         }
         return instance;
+    }
+
+    public boolean isLocationActive() {
+        LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        try {
+            gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        try {
+            network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+        } catch (Exception ex) {
+        }
+
+        return gps_enabled || network_enabled;
     }
 
     public void init() {
@@ -72,7 +89,7 @@ public class LocalizationService {
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2, 300, locationListener);
+        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2, 300, locationListener);
 
     }
 
@@ -111,23 +128,19 @@ public class LocalizationService {
 
         @Override
         public void onLocationChanged(Location location) {
-            log.setText(Double.toString(location.getLatitude()) + "..." + Double.toString(location.getLongitude()));
         }
 
         @Override
         public void onStatusChanged(String provider, int status, Bundle extras) {
-            log.setText("Status Changed");
         }
 
         @Override
         public void onProviderEnabled(String provider) {
-            log.setText("On Provider enabled");
 
         }
 
         @Override
         public void onProviderDisabled(String provider) {
-            log.setText("Ese necesario activar el servicio de localización en el menú ajustes/seguridad/localizacion");
 
         }
     }

@@ -56,7 +56,7 @@
             android:id="@+id/settingsLayout"
             android:layout_weight="3"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="match_parent" />
 
 
     </FrameLayout>

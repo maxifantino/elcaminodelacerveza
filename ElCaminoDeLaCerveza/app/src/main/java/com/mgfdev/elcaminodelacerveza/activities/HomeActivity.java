@@ -19,6 +19,7 @@ import android.view.Window;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.services.CustomCommand;
@@ -34,7 +35,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
     private LocalizationService localizationService;
     private Context ctx;
     private Activity activity;
-    private static final int CALL_SETTINGS = 1;
+    private CustomFragment passportObserver;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -63,6 +64,10 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
             return result;
         }
     };
+
+    public void attachPassportObserver(CustomFragment observer){
+        this.passportObserver = observer;
+    }
 
     public User getUser() {
         if (user == null) {
@@ -131,7 +136,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         dlgAlert.setTitle(title);
         dlgAlert.setPositiveButton(yesText, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), CALL_SETTINGS);
+                startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), AppConstants.LOCATION_SETTINGS_REQUEST_CODE);
 
             }
         });
@@ -159,6 +164,11 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         setLocationUpdates(true);
+        // por complemento ya que un bug en el qr scan pisa el requestCode.
+        if (requestCode != AppConstants.LOCATION_SETTINGS_REQUEST_CODE){
+            passportObserver.onActivityResult(requestCode, resultCode, intent);
+        }
+
     }
 
     @Override

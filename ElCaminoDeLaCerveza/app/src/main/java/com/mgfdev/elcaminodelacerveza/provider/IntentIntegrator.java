@@ -36,6 +36,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
 
 /**
  * <p>A utility class which helps ease integration with Barcode Scanner via {@link Intent}s. This is a simple
@@ -111,7 +112,7 @@ import com.mgfdev.elcaminodelacerveza.R;
  */
 public class IntentIntegrator {
 
-    public static final int REQUEST_CODE = 0x0000c0de; // Only use bottom 16 bits
+    public static int REQUEST_CODE = AppConstants.QR_REQUEST_CODE; // Only use bottom 16 bits
     private static final String TAG = IntentIntegrator.class.getSimpleName();
 
 
@@ -414,7 +415,6 @@ public class IntentIntegrator {
      *  the fields will be null.
      */
     public static IntentResult parseActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 String contents = intent.getStringExtra("SCAN_RESULT");
                 String formatName = intent.getStringExtra("SCAN_RESULT_FORMAT");
@@ -428,9 +428,9 @@ public class IntentIntegrator {
                         orientation,
                         errorCorrectionLevel);
             }
-            return new IntentResult();
-        }
-        return null;
+            else{
+                return new IntentResult();
+            }
     }
 
 

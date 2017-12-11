@@ -1,39 +1,23 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListViewCompat;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListView;
 
-import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.mgfdev.elcaminodelacerveza.BuildConfig;
 import com.mgfdev.elcaminodelacerveza.R;
-import com.mgfdev.elcaminodelacerveza.adapter.PassportAdapter;
-import com.mgfdev.elcaminodelacerveza.adapter.PassportListAdapter;
 import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
-import com.mgfdev.elcaminodelacerveza.dto.Brewer;
 import com.mgfdev.elcaminodelacerveza.dto.Passport;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
@@ -43,7 +27,6 @@ import com.mgfdev.elcaminodelacerveza.provider.IntentResult;
 import com.mgfdev.elcaminodelacerveza.services.BrewerHelperService;
 import com.mgfdev.elcaminodelacerveza.services.PassportService;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -53,12 +36,12 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link PassportFragment.OnFragmentInteractionListener} interface
+ * {@link BeerListFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link PassportFragment#newInstance} factory method to
+ * Use the {@link BeerListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PassportFragment extends CustomFragment{
+public class BeerListFragment extends CustomFragment{
     // TODO: Rename parameter arguments, choose names that match
 
     private OnFragmentInteractionListener mListener;
@@ -75,12 +58,12 @@ public class PassportFragment extends CustomFragment{
     private PassportService passportService;
     private Uri imageUri;
     private Context ctx;
-    public PassportFragment() {
+    public BeerListFragment() {
         // Required empty public constructor
     }
 
-    public static PassportFragment newInstance(String param1, String param2) {
-        PassportFragment fragment = new PassportFragment();
+    public static BeerListFragment newInstance(String param1, String param2) {
+        BeerListFragment fragment = new BeerListFragment();
         Bundle args = new Bundle();
         fragment.setArguments(args);
         return fragment;
@@ -99,15 +82,7 @@ public class PassportFragment extends CustomFragment{
             passport = passportService.loadPassport(ctx, user);
             populatePassportList(passport);
         }
-
         initializeQRDetector();
-    }
-
-    public void populateListAdapter(View rootView){
-        ListView yourListView = (ListView) rootView.findViewById(R.id.passportListView);
-        List<Brewer> brewers = PassportAdapter.toBrewerList(user.getPassport().getBrewers());
-        PassportListAdapter customAdapter = new PassportListAdapter(ctx, R.layout.passport_list_item, brewers);
-        yourListView .setAdapter(customAdapter);
     }
 
     private void initializeQRDetector(){
@@ -159,7 +134,6 @@ public class PassportFragment extends CustomFragment{
         setupScanButton(rootView);
         FontHelper.overrideFonts(ctx, container
                 , "montserrat.ttf");
-        populateListAdapter(rootView);
         return rootView;
     }
     private void setupScanButton(View rootView){

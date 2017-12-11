@@ -19,8 +19,9 @@
         completions."
     </string>
     <string name="title_activity_settings">Settings</string>
-    <string name="brewer_not_found_title">Brewer not found</string>
-    <string name="brewer_not_found_message">Brewer not found</string>
+    <string name="brewer_not_found_title">Atención</string>
+    <string name="brewer_not_found_message">La cervecería {0} no está suscripta a el camino de la cerveza. O ya fue visitada</string>
+
 
     <!-- Strings related to Settings -->
 

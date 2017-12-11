@@ -54,4 +54,9 @@
         <item name="android:textColor">@color/lightWhite</item>
         <item name="android:textSize">18dp</item>
     </style>
+
+    <style name="PreferencesTheme">
+        <item name="android:background">#FFEAEAEA</item>
+    </style>
+
 </resources>

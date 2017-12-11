@@ -123,7 +123,7 @@ public class ServiceDao {
 		ContentValues newRow = new ContentValues();
 		newRow.put("user_id", userId);
 		newRow.put("brewer", brewerName);
-		newRow.put("created_date", DateHelper.getDate(new Date()));
+		newRow.put("date_created", DateHelper.getDate(new Date()));
 		db.insert("PASSPORT", null, newRow);
 		db.close();
 		dbHelper.close();
@@ -141,7 +141,7 @@ public class ServiceDao {
 				null);
 		Map <String, Date> brewers = new HashMap <String, Date>();
 		while (mCursor!= null && mCursor.getCount() > 0 && mCursor.moveToNext()){
-			brewers.put(mCursor.getString(1), DateHelper.getDate(mCursor.getString(2)));
+			brewers.put(mCursor.getString(0), DateHelper.getDate(mCursor.getString(1)));
 		}
 
 		dbHelper.close();

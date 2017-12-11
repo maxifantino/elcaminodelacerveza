@@ -1,40 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:background="@color/darkWhite"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_height="match_parent">
     <PreferenceCategory android:title="@string/location_title">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="location"
             android:id="@+id/btnLocationPreference"
+            android:key="location"
             android:title="@string/location_description" />
     </PreferenceCategory>
 
 
     <PreferenceCategory android:title="@string/location_time">
         <SeekBarPreference
-            android:defaultValue="true"
-            android:key="location"
+            android:defaultValue="5"
             android:id="@+id/minsSeekBarPreference"
+            android:key="time"
+            android:max="60"
             android:title="@string/location_time_description" />
     </PreferenceCategory>
 
-<!--
-    <PreferenceCategory android:title="@string/location_time">
+
+    <PreferenceCategory android:title="@string/location_meters">
         <SeekBarPreference
-            android:defaultValue="true"
-            android:key="location"
+            android:defaultValue="200"
+            android:key="meters"
             android:id="@+id/metersSeekBarPreference"
-            android:title="@string/location_time_description" />
+            android:max="1000"
+            android:title="@string/location_meters_description" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/session_title">
         <SwitchPreference
             android:defaultValue="true"
-            android:key="location"
+            android:key="closeSession"
             android:id="@+id/btnCloseSessionPreference"
             android:title="@string/session_description" />
     </PreferenceCategory>
 
--->
 </PreferenceScreen>

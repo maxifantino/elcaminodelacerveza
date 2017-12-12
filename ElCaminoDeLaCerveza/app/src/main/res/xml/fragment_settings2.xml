@@ -15,17 +15,18 @@
 
 
     <PreferenceCategory android:title="@string/location_time">
-        <SeekBarPreference
+        <com.mgfdev.elcaminodelacerveza.helpers.CustomSeekBarPreference
             android:defaultValue="5"
             android:id="@+id/minsSeekBarPreference"
             android:key="time"
             android:max="60"
             android:title="@string/location_time_description" />
+
     </PreferenceCategory>
 
 
     <PreferenceCategory android:title="@string/location_meters">
-        <SeekBarPreference
+        <com.mgfdev.elcaminodelacerveza.helpers.CustomSeekBarPreference
             android:defaultValue="200"
             android:key="meters"
             android:id="@+id/metersSeekBarPreference"

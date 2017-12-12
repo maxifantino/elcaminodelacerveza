@@ -11,6 +11,7 @@ import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.Brewer;
 import com.mgfdev.elcaminodelacerveza.helpers.DateHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,6 @@ import java.util.List;
 public class PassportListAdapter extends ArrayAdapter<Brewer> {
 
     private int layoutResourceId;
-
     public PassportListAdapter(Context context, int layoutResourceId, List<Brewer> items) {
         super(context, layoutResourceId, items);
         this.layoutResourceId = layoutResourceId;
@@ -40,15 +40,15 @@ public class PassportListAdapter extends ArrayAdapter<Brewer> {
         Brewer p = getItem(position);
 
         if (p != null) {
-            TextView tt1 = (TextView) v.findViewById(R.id.brewerNameItem);
-            TextView tt2 = (TextView) v.findViewById(R.id.brewerNameItem);
+            TextView tt1 = (TextView) v.findViewById(R.id.brewerNameText);
+            TextView tt2 = (TextView) v.findViewById(R.id.createdDateText);
 
             if (tt1 != null) {
-                tt1.setText(p.getBrewerName());
+                tt1.setText("Cerveceria: " + p.getBrewerName());
             }
 
             if (tt2 != null) {
-                tt2.setText(DateHelper.getDate(p.getDateCreated()));
+                tt2.setText("Fecha: " + DateHelper.getDate(p.getDateCreated()));
             }
         }
         return v;

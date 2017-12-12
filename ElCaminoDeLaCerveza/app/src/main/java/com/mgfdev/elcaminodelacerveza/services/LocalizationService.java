@@ -28,6 +28,8 @@ import java.util.Timer;
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 
+import static com.mgfdev.elcaminodelacerveza.helpers.NotificationHelper.createNotification;
+
 /**
  * Created by Maxi on 12/11/2017.
  */
@@ -38,7 +40,7 @@ public class LocalizationService {
     private static Context ctx;
     private LocationManager locationManager;
     private CacheManagerHelper cacheManager;
-    private String ACTION_PROXIMITY_ALERT = "com.mgfdev.elcaminodelacerveza.ProximityAlert";
+    private String ACTION_PROXIMITY_ALERT = "com.mgfdev.elcaminodelacerveza.services.ProximityAlert";
     private static TextView log;
     private static FragmentActivity localizationObserver;
     private LocalizationService() {
@@ -75,7 +77,7 @@ public class LocalizationService {
 
     public void init() {
         locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new CustomLocationListener();
+      //  locationListener = new CustomLocationListener();
         CacheManagerHelper cacheBrewers = CacheManagerHelper.getInstance();
         populateProximityAlerts(cacheBrewers);
         IntentFilter filter = new IntentFilter(ACTION_PROXIMITY_ALERT);
@@ -83,7 +85,7 @@ public class LocalizationService {
     }
 
     public void stop(){
-        locationManager.removeUpdates(locationListener);
+//        locationManager.removeUpdates(locationListener);
     }
     public void getLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -95,13 +97,17 @@ public class LocalizationService {
 
     private void populateProximityAlerts(CacheManagerHelper cacheBrewers) {
         List<BeerLocation> beerLocations = cacheBrewers.getBrewers();
+        int meters = Integer.valueOf(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"));
         for (BeerLocation item : beerLocations) {
             Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
             intent.putExtra("brewer", item.getBrewery());
+            intent.putExtra("address", item.getAddress());
+            intent.putExtra("brewerUrl",buildGMapsIntentExtra(item.getLatitude(),item.getLongitude()));
+
             PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
             try {
-                //               locationManager.addProximityAlert(-34.800254, //item.getLatitude(),
-                //                     -58.4116293 /*item.getLongitude()*/, GeofencesConstants.GEOFENCE_RADIUS_IN_METERS, -1, pendingIntent);
+                    locationManager.addProximityAlert(item.getLatitude(),
+                            item.getLongitude(), meters, -1, pendingIntent);
             } catch (SecurityException e) {
                 e.printStackTrace();
             }
@@ -119,9 +125,18 @@ public class LocalizationService {
         Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
         intent.putExtra("brewer", "Lallal");
         PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
+        //printDumy
+        BeerLocation item = beerLocations.get(0);
+        createNotification(ctx, item.getBrewery(),buildGMapsIntentExtra(item.getLatitude(), item.getLongitude()), item.getAddress());
 
+         //end printDumy
         locationManager.addProximityAlert(-34.790254, //item.getLatitude(),
                 -58.4028293 /*item.getLongitude()*/, GeofencesConstants.GEOFENCE_RADIUS_IN_METERS, -1, pendingIntent);
+    }
+
+    private String buildGMapsIntentExtra(Double latitude, Double longitude){
+        String extra = "geo:" + Double.toString(latitude) + "," + Double.toString(longitude);
+        return extra;
     }
 
     private class CustomLocationListener implements LocationListener{

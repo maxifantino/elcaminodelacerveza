@@ -115,6 +115,14 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void setLocationLayoutState (boolean enabled){
         metersSeekBar.setEnabled(enabled);
+     /*   metersSeekBar.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                Preference  metersText = findPreference("timeText");
+                metersText.setTitle(preference.getTitle());
+                return true;
+            }
+        });*/
         timeSeekBar.setEnabled(enabled);
     }
 

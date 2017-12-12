@@ -163,9 +163,11 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        setLocationUpdates(true);
         // por complemento ya que un bug en el qr scan pisa el requestCode.
-        if (requestCode != AppConstants.LOCATION_SETTINGS_REQUEST_CODE){
+        if (requestCode == AppConstants.LOCATION_SETTINGS_REQUEST_CODE){
+            setLocationUpdates(true);
+        }
+        else{
             passportObserver.onActivityResult(requestCode, resultCode, intent);
         }
 

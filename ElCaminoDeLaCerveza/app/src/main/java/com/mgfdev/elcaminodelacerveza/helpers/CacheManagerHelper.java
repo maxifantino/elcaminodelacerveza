@@ -3,6 +3,7 @@ package com.mgfdev.elcaminodelacerveza.helpers;
 import android.os.AsyncTask;
 
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
+import com.mgfdev.elcaminodelacerveza.dto.BrewerListItem;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -17,6 +18,7 @@ import java.util.List;
 public class CacheManagerHelper {
 
     private static Cache brewersCache = null;
+    private static Cache brewersCacheList = null;
     private static CacheManagerHelper instance = null;
 
     private CacheManagerHelper(){
@@ -43,6 +45,11 @@ public class CacheManagerHelper {
         addbrewersToCache(beerLocations);
     }
 
+    public  void createBrewerListCache(List <BeerLocation> beerLocations) {
+        createCacheList();
+        addbrewersToCache(beerLocations);
+    }
+
     private void createCache(){
         CacheManager cacheManager = CacheManager.getInstance();
         int twoDays = 2 * 24 * 60 * 60;
@@ -50,6 +57,12 @@ public class CacheManagerHelper {
         brewersCache.initialise();
     }
 
+    private void createCacheList(){
+        CacheManager cacheManager = CacheManager.getInstance();
+        int twoDays = 2 * 24 * 60 * 60;
+        brewersCacheList = new Cache("name", 2000, false, false, twoDays, twoDays);
+        brewersCacheList.initialise();
+    }
     public List<BeerLocation> getBrewers() {
         return getBrewers(null, null);
     }
@@ -83,7 +96,17 @@ public class CacheManagerHelper {
             createBrewerCacheAsync(beerLocations);
         }
     }
-
+    public void addbrewersListToCache(List <BrewerListItem> brewers){
+        if (brewersCache != null){
+            for (BrewerListItem item: brewers) {
+                Element singleElement = new Element(item.getBrewerName(),item );
+                brewersCache.put(singleElement, false);
+            }
+        }
+        else{
+      //      createBrewerCacheAsync(brewers);
+        }
+    }
     class CacheAsyncTask extends AsyncTask<Void,Void,Void>{
         private List<BeerLocation> beerLocations;
 

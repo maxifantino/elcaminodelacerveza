@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.google.android.gms.vision.Frame;
@@ -47,6 +48,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -75,6 +77,8 @@ public class PassportFragment extends CustomFragment{
     private PassportService passportService;
     private Uri imageUri;
     private Context ctx;
+    private ListView passportListView;
+    PassportListAdapter customAdapter;
     public PassportFragment() {
         // Required empty public constructor
     }
@@ -104,10 +108,11 @@ public class PassportFragment extends CustomFragment{
     }
 
     public void populateListAdapter(View rootView){
-        ListView yourListView = (ListView) rootView.findViewById(R.id.passportListView);
-        List<Brewer> brewers = PassportAdapter.toBrewerList(user.getPassport().getBrewers());
-        PassportListAdapter customAdapter = new PassportListAdapter(ctx, R.layout.passport_list_item, brewers);
-        yourListView .setAdapter(customAdapter);
+        passportListView = (ListView) rootView.findViewById(R.id.passportListView);
+
+        List<Brewer> brewers = PassportAdapter.toBrewerList(passport.getBrewers());
+        customAdapter = new PassportListAdapter(ctx, R.layout.passport_list_row, brewers);
+        passportListView .setAdapter(customAdapter);
     }
 
     private void initializeQRDetector(){
@@ -143,6 +148,8 @@ public class PassportFragment extends CustomFragment{
         passport.addBrewer(brewer);
         ServiceDao dao = new ServiceDao();
         dao.savePassportItem(ctx, user.getId(), brewer);
+        customAdapter.add(new Brewer(brewer, new Date()));
+        customAdapter.notifyDataSetChanged();
     }
 
     private void populatePassport (){
@@ -164,6 +171,7 @@ public class PassportFragment extends CustomFragment{
     }
     private void setupScanButton(View rootView){
         scanBreweButton = (Button) rootView.findViewById(R.id.addBrewer);
+        scanBreweButton.setTextColor (getResources().getColor(R.color.darkWhite, getActivity().getTheme()));
         scanBreweButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.LocationManager;
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.helpers.NotificationHelper;
 
 /**
  * Created by Maxi on 18/11/2017.
@@ -22,18 +23,9 @@ public class LocationUpdateReceiver extends BroadcastReceiver {
         String craftUrl = intent.getStringExtra("brewerUrl");
         String craftAddress = intent.getStringExtra("address");
         if (sendNotification) {
-            createNotification(context, craftName, craftUrl);
+            NotificationHelper.createNotification(context, craftName, craftUrl,craftAddress);
         }
     }
 
-    private void createNotification(Context context, String craftName, String craftUrl) {
-        //hook
-        NotificationManager notif=(NotificationManager)context.getSystemService(Context.NOTIFICATION_SERVICE);
-        Notification notify=new Notification.Builder(context)
-                .setContentTitle(context.getString(R.string.app_name))
-                .setContentText(java.text.MessageFormat.format(context.getString(R.string.proximity_advice), craftName, craftUrl))
-                .build();//tSma llIcon(R.drawable.abc).build();
-        notify.flags |= Notification.FLAG_AUTO_CANCEL;
-        notif.notify(0, notify);
-    }
+
 }

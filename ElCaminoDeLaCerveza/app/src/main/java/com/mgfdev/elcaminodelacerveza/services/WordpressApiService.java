@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
+import com.mgfdev.elcaminodelacerveza.dto.BrewerListItem;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -20,6 +21,7 @@ import java.util.Map;
 public class WordpressApiService {
 
     private static final String LOGIN_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/login?username={0}&password={1}";
+    private static final String BREWERS_LIST_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/breweries";
     private static final String BREWERS_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/breweries";
     private RestWebService restService;
 
@@ -62,5 +64,20 @@ public class WordpressApiService {
             e.printStackTrace();
         }
         return locations;
+    }
+
+    public List<BrewerListItem> getBrewerList(){
+        List<BrewerListItem> brewers = new ArrayList<BrewerListItem>();
+        String beerJson;
+        try {
+            beerJson = restService.doGet(BREWERS_LIST_URL, null);
+            TypeToken<List<BrewerListItem>> token = new TypeToken<List<BrewerListItem>>(){};
+            brewers = new Gson().fromJson(beerJson, token.getType());
+        }
+        catch (Exception
+                e){
+            e.printStackTrace();
+        }
+        return brewers;
     }
 }

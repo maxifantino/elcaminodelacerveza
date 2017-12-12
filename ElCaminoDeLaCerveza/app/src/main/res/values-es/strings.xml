@@ -11,7 +11,7 @@
     </string>
     <string name="title_activity_settings">Settings</string>
     <string name="brewer_not_found_title">Atención</string>
-    <string name="brewer_not_found_message">La cervecería {0} no está suscripta a el camino de la cerveza. O ya fue visitada</string>
+    <string name="brewer_not_found_message">La cervecería {0} no está suscripta al camino de la cerveza. O ya fue visitada</string>
 
     <!-- Strings related to Settings -->
 
@@ -116,4 +116,6 @@
     <string name="activate">Activar</string>
     <string name="exitMessage">Deseas salir de la aplicación?</string>
     <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
+    <string name="proximity_advice">Te encuentras próximo a la cervecería {0}. \n Se encuentra en {1}. Quieres ir? </string>
+
 </resources>

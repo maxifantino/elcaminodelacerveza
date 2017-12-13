@@ -24,6 +24,7 @@ import com.mgfdev.elcaminodelacerveza.adapter.PassportListAdapter;
 import com.mgfdev.elcaminodelacerveza.dto.Brewer;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
+import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 import com.mgfdev.elcaminodelacerveza.R;
@@ -128,9 +129,9 @@ public class SettingsFragment extends PreferenceFragment {
 
     private Map getPreferencesValues(){
         Map<String, String> result = new HashMap<String, String>();
-        result.put("meters",sharedPreferences.getStringValue("meters"));
-        result.put("mins",sharedPreferences.getStringValue("mins"));
-        result.put("location",sharedPreferences.getStringValue("location"));
+        result.put("meters",StringUtils.defaultString(sharedPreferences.getStringValue("meters"),Integer.toString(GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)));
+        result.put("mins",StringUtils.defaultString(sharedPreferences.getStringValue("mins"),"0"));
+        result.put("location",StringUtils.defaultString(sharedPreferences.getStringValue("location"), "false"));
 
         return result;
     }

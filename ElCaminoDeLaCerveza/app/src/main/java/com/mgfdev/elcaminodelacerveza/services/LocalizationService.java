@@ -28,6 +28,8 @@ import java.util.Timer;
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 
+import org.apache.commons.lang3.StringUtils;
+
 import static com.mgfdev.elcaminodelacerveza.helpers.NotificationHelper.createNotification;
 
 /**
@@ -97,7 +99,7 @@ public class LocalizationService {
 
     private void populateProximityAlerts(CacheManagerHelper cacheBrewers) {
         List<BeerLocation> beerLocations = cacheBrewers.getBrewers();
-        int meters = Integer.valueOf(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"));
+        int meters = Integer.valueOf(StringUtils.defaultString(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"), Integer.toString(GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)));
         for (BeerLocation item : beerLocations) {
             Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
             intent.putExtra("brewer", item.getBrewery());

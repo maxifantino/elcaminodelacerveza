@@ -6,35 +6,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.SwitchPreference;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.mgfdev.elcaminodelacerveza.R;
-import com.mgfdev.elcaminodelacerveza.adapter.PassportListAdapter;
-import com.mgfdev.elcaminodelacerveza.dto.Brewer;
 import com.mgfdev.elcaminodelacerveza.dto.User;
-import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
-import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
-import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.services.SharedPreferenceManager;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,13 +36,13 @@ import java.util.Map;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends PreferenceFragment {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
     private OnFragmentInteractionListener mListener;
     private Context ctx;
     private User user;
-    private SwitchPreference closeSessionBtn;
-    private Preference  metersSeekBar;
+    private SwitchPreferenceCompat closeSessionBtn;
+    private Preference metersSeekBar;
     private Preference  timeSeekBar;
     private TextView metersText;
     private TextView timeText;
@@ -59,7 +50,7 @@ public class SettingsFragment extends PreferenceFragment {
     private View layoutMins;
     private SharedPreferenceManager sharedPreferences;
     private HomeActivity activity;
-    private SwitchPreference locationButton;
+    private SwitchPreferenceCompat locationButton;
     private View rootView;
     public SettingsFragment() {
         // Required empty public constructor
@@ -82,6 +73,11 @@ public class SettingsFragment extends PreferenceFragment {
         addPreferencesFromResource(R.xml.fragment_settings2);
     }
 
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+
+    }
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
@@ -102,7 +98,7 @@ public class SettingsFragment extends PreferenceFragment {
     }
 
     private void setupSwitchButtons(View rootView,  Map<String, String> config){
-        locationButton = (SwitchPreference) findPreference("location");
+        locationButton = (SwitchPreferenceCompat) findPreference("location");
         locationButton.setDefaultValue(true);
         locationButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
@@ -116,14 +112,6 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void setLocationLayoutState (boolean enabled){
         metersSeekBar.setEnabled(enabled);
-     /*   metersSeekBar.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-            @Override
-            public boolean onPreferenceClick(Preference preference) {
-                Preference  metersText = findPreference("timeText");
-                metersText.setTitle(preference.getTitle());
-                return true;
-            }
-        });*/
         timeSeekBar.setEnabled(enabled);
     }
 
@@ -138,14 +126,14 @@ public class SettingsFragment extends PreferenceFragment {
 
     private void setupSeekBars(View rootView,  Map<String, String> config){
         // get sharedPreferenceValues
-        metersSeekBar = findPreference("meters");
-        timeSeekBar= findPreference("time");
+        metersSeekBar = (Preference) findPreference("meters");
+        timeSeekBar= (Preference) findPreference("time");
         metersSeekBar.setDefaultValue(Integer.parseInt(config.get("meters")));
         timeSeekBar.setDefaultValue(Integer.parseInt(config.get("mins")));
     }
 
     private void setupCloseSessionButton ( View rootView){
-        closeSessionBtn =(SwitchPreference)findPreference("closeSession");
+        closeSessionBtn =(SwitchPreferenceCompat) findPreference("closeSession");
         closeSessionBtn.setDefaultValue(false);
         closeSessionBtn.setEnabled(StringUtils.isNotBlank(user.getUsername()));
         closeSessionBtn.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {

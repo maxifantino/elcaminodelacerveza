@@ -12,6 +12,12 @@ import android.widget.TextView;
 
 public class FontHelper {
 
+    public void setFont(final Context ctx, TextView v, String fontName){
+        Typeface myTypeface = Typeface.createFromAsset(v.getContext().getAssets(),fontName);
+        if (v != null) {
+            v.setTypeface(myTypeface);
+        }
+    }
     public static void overrideFonts(final Context context, final View v, String fontName) {
         try {
             if (v instanceof ViewGroup) {

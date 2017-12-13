@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
-    android:background="@color/darkWhite"
+    android:background="@color/lightWhite"
     android:orientation="vertical"
     android:baselineAligned="false"
     tools:context="com.mgfdev.elcaminodelacerveza.activities.PassportFragment">
@@ -26,11 +26,12 @@
 
 
         <Button
-            android:layout_width="300dp"
+            android:layout_width="200dp"
             android:layout_height="wrap_content"
             android:id="@+id/addBrewer"
-            android:background="@drawable/passport_selector"
+            android:background="@drawable/gradient_button"
             android:layout_weight="0"
+            android:textSize="20sp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:text="@string/scan_button_text"/>

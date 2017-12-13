@@ -42,6 +42,7 @@ dependencies {
 
     compile 'com.android.support:support-v4:25.2.0'
     compile 'com.android.support:appcompat-v7:25.2.0'
+    compile 'com.android.support:preference-v7:25.2.0'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5'
     compile 'org.apache.commons:commons-lang3:3.5'
     compile 'com.google.code.gson:gson:2.8.1'

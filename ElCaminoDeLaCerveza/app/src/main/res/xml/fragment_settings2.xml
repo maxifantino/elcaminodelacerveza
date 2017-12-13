@@ -5,17 +5,20 @@
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:layout_height="match_parent">
-    <PreferenceCategory android:title="@string/location_title">
-        <SwitchPreference
+    <PreferenceCategory android:title="@string/location_title"      android:textAppearance="?android:attr/textAppearanceSmall"
+        >
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:id="@+id/btnLocationPreference"
             android:key="location"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+
             android:title="@string/location_description" />
     </PreferenceCategory>
 
 
     <PreferenceCategory android:title="@string/location_time">
-        <com.mgfdev.elcaminodelacerveza.helpers.CustomSeekBarPreference
+        <android.support.v7.preference.SeekBarPreference
             android:defaultValue="5"
             android:id="@+id/minsSeekBarPreference"
             android:key="time"
@@ -26,7 +29,7 @@
 
 
     <PreferenceCategory android:title="@string/location_meters">
-        <com.mgfdev.elcaminodelacerveza.helpers.CustomSeekBarPreference
+        <android.support.v7.preference.SeekBarPreference
             android:defaultValue="200"
             android:key="meters"
             android:id="@+id/metersSeekBarPreference"
@@ -35,7 +38,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/session_title">
-        <SwitchPreference
+        <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="closeSession"
             android:id="@+id/btnCloseSessionPreference"

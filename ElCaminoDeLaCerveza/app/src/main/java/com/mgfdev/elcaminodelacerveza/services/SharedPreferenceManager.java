@@ -30,7 +30,15 @@ public class SharedPreferenceManager {
     }
 
     public String getStringValue(String key){
-        return pref.getString(key, null);
+        String result;
+        if (key .equals("meters")) {
+            String aux =  pref.getString(key, "200");
+            result = Integer.parseInt(aux)< 200 ? "200" : aux;
+        }
+        else{
+            result =  pref.getString(key, null);
+        }
+        return result;
     }
 
 }

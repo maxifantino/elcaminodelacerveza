@@ -119,6 +119,8 @@
     <string name="app_description">El camino de la cerveza</string>
     <string name="loading_title">Cargando.....</string>
     <string name="close_session">Sesión</string>
+    <string name="notConnectedMessage">Esta aplicación necesita va de una conexión a internet para bajar contenidos. Deseas conectarte?</string>
+
     <string name="close_session_message">Estás seguro que deseas cerrar la sesión actual?</string>
     <string name="barcodeTitle">Instalar Barcode scanner?</string>
     <string name="barcodeDescription">Esta aplicacion necesita un Lector de QR. Quieres instalarlo?</string>

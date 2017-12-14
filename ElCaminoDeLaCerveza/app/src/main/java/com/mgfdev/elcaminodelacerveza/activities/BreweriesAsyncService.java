@@ -29,7 +29,7 @@ public class BreweriesAsyncService extends AsyncTask<Object, Object, Object> {
        // brewerList = service.getBrewerList();
         CacheManagerHelper instance = CacheManagerHelper.getInstance();
         instance.createBrewerCache(locations);
-     //   instance.createBrewerListCache (brewerList);
+     //   instance.createBrewerList (brewerList);
         return locations;
     }
 

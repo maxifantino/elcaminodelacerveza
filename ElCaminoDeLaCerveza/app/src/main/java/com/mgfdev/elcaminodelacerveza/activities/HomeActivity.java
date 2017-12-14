@@ -55,6 +55,11 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
                     layout.setVisibility(View.VISIBLE);
                     result = true;
                     break;
+                case R.id.brewersLayout:
+                    layout = findViewById(R.id.brewersLayout);
+                    layout.setVisibility(View.VISIBLE);
+                    result = true;
+                    break;
                 case R.id.navigation_settings:
                     layout = findViewById(R.id.settingsLayout);
                     layout.setVisibility(View.VISIBLE);
@@ -81,6 +86,8 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         layoutSeetings.setVisibility(View.INVISIBLE);
         View mapsLayout = findViewById(R.id.mapsLayout);
         mapsLayout.setVisibility(View.INVISIBLE);
+        View brewersLayout = findViewById(R.id.brewersLayout);
+        brewersLayout.setVisibility(View.INVISIBLE);
         View passportLayout = findViewById(R.id.passportLayout);
         passportLayout.setVisibility(View.INVISIBLE);
     }
@@ -100,6 +107,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        navigation.shi
         ctx = this.getApplicationContext();
         user = (User) getIntent().getSerializableExtra("USER");
         sharedPreferences = SharedPreferenceManager.getInstance(this);

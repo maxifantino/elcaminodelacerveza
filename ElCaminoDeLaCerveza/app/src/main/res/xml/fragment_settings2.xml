@@ -5,14 +5,12 @@
     android:layout_marginLeft="15dp"
     android:layout_marginRight="15dp"
     android:layout_height="match_parent">
-    <PreferenceCategory android:title="@string/location_title"      android:textAppearance="?android:attr/textAppearanceSmall"
-        >
+    <PreferenceCategory android:title="@string/location_title"
+         >
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:id="@+id/btnLocationPreference"
             android:key="location"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-
             android:title="@string/location_description" />
     </PreferenceCategory>
 
@@ -37,7 +35,8 @@
             android:title="@string/location_meters_description" />
     </PreferenceCategory>
 
-    <PreferenceCategory android:title="@string/session_title">
+    <PreferenceCategory android:title="@string/session_title"
+        >
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="closeSession"

@@ -67,7 +67,7 @@
 
             </android.support.design.widget.TextInputLayout>
 
-            <ImageButton
+            <Button
                 android:id="@+id/email_sign_in_button"
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
@@ -75,6 +75,7 @@
                 android:textSize="20sp"
                 android:textColor="@color/titleFontColor"
                 android:background="@drawable/gradient_button"
+                android:text="@string/logintext"
                 android:textStyle="bold" />
 
         </LinearLayout>

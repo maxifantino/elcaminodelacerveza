@@ -1,27 +1,17 @@
 <resources>
     <string name="app_name">El Camino De La Cerveza</string>
-
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="title_activity_login">Ingresar en tu cuenta</string>
-    <string name="proximity_advice">Te encuentras próximo a la cervecería {0}. Se encuentra en {1}. Quieres ir? </string>
-
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email/Username</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
+    <string name="prompt_email">Usuario</string>
+    <string name="prompt_password">Contraseña</string>
+    <string name="action_sign_in">Acceder</string>
+    <string name="action_sign_in_short">Inicia Sesión</string>
     <string name="error_incorrect_password">La contraseña es incorrecta. Si sos nuevo, registrate  <a href="https://www.elcaminodelacerveza.com">aqui</a> </string>
-    <string name="error_field_required">This field is required</string>
-    <string name="permission_rationale">"Contacts permissions are needed for providing email
-        completions."
+    <string name="error_field_required">El usuario es obligatorio</string>
+    <string name="permission_rationale">"Los permisos para acceder a tus contactos son necesarios para el autocompletar"
     </string>
     <string name="title_activity_settings">Settings</string>
     <string name="brewer_not_found_title">Atención</string>
     <string name="brewer_not_found_message">La cervecería {0} no está suscripta al camino de la cerveza. O ya fue visitada</string>
-
 
     <!-- Strings related to Settings -->
 
@@ -98,38 +88,36 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_activity_home">HomeActivity</string>
     <string name="title_home">Home</string>
-    <string name="title_passport">Passport</string>
-    <string name="title_settings">Setup</string>
-    <string name="scan_button_text">Scan</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_maps_new">Map</string>
-    <string name="title_activity_ajustes">Settings</string>
-
+    <string name="title_passport">Pasaporte</string>
+    <string name="title_settings">Ajustes</string>
+    <string name="scan_button_text">Agregar</string>
     <string name="location_title">Ubicacion</string>
-    <string name="location_description">Permite recibir notificaciones</string>
+    <string name="location_description">Permite recibir notificaciones en caso de estar cerca de una cervecería</string>
     <string name="location_meters">Radio</string>
     <string name="location_meters_description">Distancia en Metros</string>
     <string name="location_time">Intervalo</string>
     <string name="location_time_description">Tiempo en minutos entre actualizaciones</string>
     <string name="session_title">Sesión</string>
-    <string name="session_description">Estas registrado como {0}. Cerrar sesion?</string>
+    <string name="session_description">Estas registrado como {0}. ¿Cerrar sesion?</string>
     <string name="no_session_description">No hay usuario Registrado</string>
+    <string name="close_session">Sesión</string>
     <string name="app_description">El camino de la cerveza</string>
     <string name="loading_title">Cargando.....</string>
-    <string name="close_session">Sesión</string>
+    <string name="close_session_message">¿Estás seguro qué deseas cerrar la sesión actual?</string>
     <string name="notConnectedMessage">Esta aplicación necesita va de una conexión a internet para bajar contenidos. Deseas conectarte?</string>
-
-    <string name="close_session_message">Estás seguro que deseas cerrar la sesión actual?</string>
+    <string name="retry">Reintentar</string>
+    <string name="cancel">Cancelar</string>
     <string name="barcodeTitle">Instalar Barcode scanner?</string>
     <string name="barcodeDescription">Esta aplicacion necesita un Lector de QR. Quieres instalarlo?</string>
     <string name="yes"> Si</string>
     <string name="no">No</string>
-    <string name="retry">Reintentar</string>
-    <string name="cancel">Cancelar</string>
-
     <string name="activateLocationTitle">Activar localizacion</string>
     <string name="activateLocationDescription">Para poder recibir notificaciones de cervecerias cercanas, precisas activar los servicios de ubicación.</string>
     <string name="activate">Activar</string>
+    <string name="exitMessage">Deseas salir de la aplicación?</string>
+    <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
+    <string name="proximity_advice">Te encuentras próximo a la cervecería {0}. \n Se encuentra en {1}. Quieres ir? </string>
+    <string name="logintext">Ingresar</string>
+    <string name="title_brewers">Cervecerias</string>
+    <string name="error_invalid_password">Contraseña inválida</string>
 </resources>

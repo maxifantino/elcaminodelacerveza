@@ -1,5 +1,7 @@
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/settingsDescriptionStyle"
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.SwitchCompat
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/switchWidget"
+    android:textSize="14dp"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    />
+    android:layout_height="wrap_content"/>

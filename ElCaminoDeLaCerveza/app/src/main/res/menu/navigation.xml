@@ -10,6 +10,10 @@
         android:title="@string/title_passport" />
 
     <item
+        android:id="@+id/navigation_brewers"
+        android:title="@string/title_brewers" />
+
+    <item
         android:id="@+id/navigation_settings"
         android:title="@string/title_settings" />
 

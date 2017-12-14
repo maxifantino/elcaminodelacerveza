@@ -117,5 +117,8 @@
     <string name="exitMessage">Deseas salir de la aplicación?</string>
     <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
     <string name="proximity_advice">Te encuentras próximo a la cervecería {0}. \n Se encuentra en {1}. Quieres ir? </string>
-
+    <string name="logintext">Ingresar</string>
+    <string name="title_brewers">Cervecerias</string>
+    <string name="error_invalid_password">Contraseña inválida</string>
+    <string name="passport_title_message">Escanea las cervecerías para completar tu pasaporte digital.</string>
 </resources>

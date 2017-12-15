@@ -45,6 +45,10 @@ public class CacheManagerHelper {
         addbrewersToCache(beerLocations);
     }
 
+     public  void createBrewerList() {
+        createCacheList();
+    }
+
     public  void createBrewerListCache(List <BeerLocation> beerLocations) {
         createCacheList();
         addbrewersToCache(beerLocations);
@@ -60,7 +64,7 @@ public class CacheManagerHelper {
     private void createCacheList(){
         CacheManager cacheManager = CacheManager.getInstance();
         int twoDays = 2 * 24 * 60 * 60;
-        brewersCacheList = new Cache("name", 2000, false, false, twoDays, twoDays);
+        brewersCacheList = new Cache("brewerList", 2000, false, false, twoDays, twoDays);
         brewersCacheList.initialise();
     }
     public List<BeerLocation> getBrewers() {
@@ -84,6 +88,31 @@ public class CacheManagerHelper {
         }
         return beerLocations;
     }
+
+
+
+    public List<BrewerListItem> getBrewersList(String username, String password){
+        return getBrewersList(null,null);
+    }
+
+    public List<BrewerListItem> getBrewersList(String username, String password){
+        boolean itsValid = brewersCache != null && brewersCacheList.getKeys().size() > 0 ? !brewersCacheList.get(brewersCacheList.getKeys().get(0)).isExpired(): false;
+        List <BrewerListItem> beerLocations = null;
+        if (itsValid){
+            beerLocations = getBrewersListItems();
+        }
+        return beerLocations;
+    }
+
+    private List <BrewerListItem> getBrewersListItems (){
+        List <String> keys = brewersCache.getKeys();
+        List <BrewerListItem> brewersList = new ArrayList<BrewerListItem>();
+        for (String key: keys) {
+            brewersList.add ((BrewerListItem)brewersCacheList.get(key).getObjectValue());
+        }
+        return brewersList;
+    }
+
 
     public void addbrewersToCache(List <BeerLocation> beerLocations){
         if (brewersCache != null){
@@ -120,6 +149,7 @@ public class CacheManagerHelper {
             @Override
         protected Void doInBackground(Void... aVoid) {
             createCache();
+            createCacheList();
             return null;
         }
 

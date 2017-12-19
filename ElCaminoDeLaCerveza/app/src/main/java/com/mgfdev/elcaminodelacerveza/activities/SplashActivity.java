@@ -25,6 +25,7 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
     private ProgressBar mProgressView;
     private Context ctx;
     private Activity activity;
+    private Integer totalImagesDownloaded = 0;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,8 +45,9 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
 
     private void populateCache(){
         if (ConnectionHelper.isConnected(this)){
-            BreweriesAsyncServiceBreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
+            BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
             breweriesAsyncService.execute((Void) null);
+
         }
         else{
             showConnectDialog();

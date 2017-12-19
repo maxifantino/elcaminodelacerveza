@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/navigation_home"
         android:enabled="true"
-        app:showAsAction="always"
+        app:showAsAction="always|withText"
         android:title="@string/title_home" />
 
     <item
         android:id="@+id/navigation_passport"
         android:enabled="true"
-        app:showAsAction="always"
+        app:showAsAction="always|withText"
         android:title="@string/title_passport" />
 
     <item
         android:id="@+id/navigation_brewers"
         android:enabled="true"
-        app:showAsAction="always"
+        app:showAsAction="always|withText"
         android:title="@string/title_brewers" />
 
     <item
         android:enabled="true"
-        app:showAsAction="always"
+        app:showAsAction="always|withText"
         android:id="@+id/navigation_settings"
         android:title="@string/title_settings" />
 

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="15dp"
+    android:layout_marginRight="15dp"
+    android:layout_marginBottom="15dp"
+
+    android:background="@drawable/list_selector"
+    android:orientation="horizontal"
+    android:padding="5dip" >
+    <LinearLayout android:id="@+id/thumbnail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:background="@drawable/passport_image_background"
+        android:layout_marginRight="5dip">
+
+        <ImageView
+            android:id="@+id/beerThumbnail"
+            android:layout_width="@dimen/brewer_thumb_width"
+            android:layout_height="@dimen/brewer_thumb_height" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_toRightOf="@+id/thumbnail"
+        android:layout_toLeftOf="@+id/arrowIconContainer"
+        android:id="@+id/textviewContainer">
+    <TextView
+        android:id="@+id/brewerNameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/thumbnail"
+        android:textColor="#040404"
+        android:typeface="sans"
+        android:textSize="20dip"
+        android:layout_marginBottom="5dp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/addressText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/brewerNameText"
+        android:textColor="#343434"
+        android:textSize="12dip"
+        android:layout_marginTop="1dip"
+        />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:id="@+id/arrowIconContainer"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_height="wrap_content">
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:id="@+id/detailImageButton"
+        android:src="@drawable/android_red_icon"/>
+
+    </LinearLayout>
+</RelativeLayout>
+

@@ -118,6 +118,9 @@
     <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
     <string name="proximity_advice">Te encuentras próximo a la cervecería {0}. \n Se encuentra en {1}. Quieres ir? </string>
     <string name="logintext">Ingresar</string>
-    <string name="title_brewers">Cervecerias</string>
+    <string name="title_brewers">Locales</string>
     <string name="error_invalid_password">Contraseña inválida</string>
+    <string name="passportbelongstitle">Este pasaporte pertenece a {0}</string>
+    <string name="title_item_list">Items</string>
+    <string name="title_item_detail">Item Detail</string>
 </resources>

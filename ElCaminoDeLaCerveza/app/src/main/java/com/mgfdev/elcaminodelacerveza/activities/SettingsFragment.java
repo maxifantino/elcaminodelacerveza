@@ -100,6 +100,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private void setupSwitchButtons(View rootView,  Map<String, String> config){
         locationButton = (SwitchPreferenceCompat) findPreference("location");
         locationButton.setDefaultValue(true);
+        setLocationLayoutState (locationButton.isChecked());
         locationButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {

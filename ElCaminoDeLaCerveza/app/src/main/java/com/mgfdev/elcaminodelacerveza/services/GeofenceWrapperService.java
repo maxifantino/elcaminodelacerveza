@@ -1,7 +1,7 @@
 package com.mgfdev.elcaminodelacerveza.services;
 
 import com.google.android.gms.location.Geofence;
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
 
@@ -32,8 +32,8 @@ public class GeofenceWrapperService {
     public void init(){
         geofences = new ArrayList<Geofence>();
         CacheManagerHelper cacheBrewers =  CacheManagerHelper.getInstance();
-        List<BeerLocation>beerLocations = cacheBrewers.getBrewers(username, password);
-        for (BeerLocation beerlocation: beerLocations){
+        List<BrewerInfo> brewerInfos = cacheBrewers.getBrewers(username, password);
+        for (BrewerInfo beerlocation: brewerInfos){
             geofences.add(new Geofence.Builder()
                     .setRequestId(beerlocation.getBrewery())
                     .setCircularRegion(beerlocation.getLatitude(), beerlocation.getLongitude(), GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)

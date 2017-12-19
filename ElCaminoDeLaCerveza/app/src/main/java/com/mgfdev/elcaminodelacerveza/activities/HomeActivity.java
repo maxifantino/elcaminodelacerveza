@@ -20,6 +20,7 @@ import android.view.Window;
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
+import com.mgfdev.elcaminodelacerveza.helpers.BottomNavigationViewHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.services.CustomCommand;
@@ -55,7 +56,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
                     layout.setVisibility(View.VISIBLE);
                     result = true;
                     break;
-                case R.id.brewersLayout:
+                case R.id.navigation_brewers:
                     layout = findViewById(R.id.brewersLayout);
                     layout.setVisibility(View.VISIBLE);
                     result = true;
@@ -107,7 +108,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
-        navigation.shi
+        BottomNavigationViewHelper.disableShiftMode(navigation);
         ctx = this.getApplicationContext();
         user = (User) getIntent().getSerializableExtra("USER");
         sharedPreferences = SharedPreferenceManager.getInstance(this);

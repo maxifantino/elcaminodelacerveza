@@ -2,8 +2,7 @@ package com.mgfdev.elcaminodelacerveza.activities;
 
 import android.os.AsyncTask;
 
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
-import com.mgfdev.elcaminodelacerveza.dto.BrewerListItem;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
@@ -16,8 +15,7 @@ import java.util.List;
 public class BreweriesAsyncService extends AsyncTask<Object, Object, Object> {
 
     public OnPostExecuteInterface delegate = null;
-    private List<BeerLocation> locations;
-    private List<BrewerListItem> brewerList;
+    private List<BrewerInfo> locations;
     public BreweriesAsyncService(OnPostExecuteInterface asyncResponse) {
         delegate = asyncResponse;
     }

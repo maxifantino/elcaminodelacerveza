@@ -1,18 +1,13 @@
 package com.mgfdev.elcaminodelacerveza.services;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
-import com.mgfdev.elcaminodelacerveza.dto.BrewerListItem;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Maxi on 28/10/2017.
@@ -21,8 +16,7 @@ import java.util.Map;
 public class WordpressApiService {
 
     private static final String LOGIN_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/login?username={0}&password={1}";
-    private static final String BREWERS_LIST_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/breweries";
-    private static final String BREWERS_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/breweries";
+    private static final String BREWERS_URL = "https://www.elcaminodelacerveza.com/wp-json/custom-plugin/breweries-list";
     private RestWebService restService;
 
     public WordpressApiService(){
@@ -51,12 +45,12 @@ public class WordpressApiService {
         }
         return result;
     }*/
-    public List<BeerLocation> getBeerLocations (){
-        List<BeerLocation> locations = new ArrayList<>();
+    public List<BrewerInfo> getBeerLocations (){
+        List<BrewerInfo> locations = new ArrayList<>();
         String beerJson;
         try {
             beerJson = restService.doGet(BREWERS_URL, null);
-            TypeToken<List<BeerLocation>> token = new TypeToken<List<BeerLocation>>(){};
+            TypeToken<List<BrewerInfo>> token = new TypeToken<List<BrewerInfo>>(){};
             locations = new Gson().fromJson(beerJson, token.getType());
         }
         catch (Exception
@@ -66,18 +60,5 @@ public class WordpressApiService {
         return locations;
     }
 
-    public List<BrewerListItem> getBrewerList(){
-        List<BrewerListItem> brewers = new ArrayList<BrewerListItem>();
-        String beerJson;
-        try {
-            beerJson = restService.doGet(BREWERS_LIST_URL, null);
-            TypeToken<List<BrewerListItem>> token = new TypeToken<List<BrewerListItem>>(){};
-            brewers = new Gson().fromJson(beerJson, token.getType());
-        }
-        catch (Exception
-                e){
-            e.printStackTrace();
-        }
-        return brewers;
-    }
+
 }

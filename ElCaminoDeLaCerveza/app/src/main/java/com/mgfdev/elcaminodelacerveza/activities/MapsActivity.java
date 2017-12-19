@@ -1,8 +1,7 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
 import android.content.Context;
-import android.support.annotation.WorkerThread;
-import android.support.v4.app.Fragment;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +16,13 @@ import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
-import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import java.util.List;
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 
 public class MapsActivity extends CustomFragment{
 
@@ -31,6 +30,7 @@ public class MapsActivity extends CustomFragment{
     private MapView mMapView;
     private CacheManagerHelper cacheHelper;
     private Context ctx;
+    private LocalizationService locService;
     public static MapsActivity newInstance (){
         MapsActivity fragment = new MapsActivity();
         return fragment;
@@ -40,6 +40,7 @@ public class MapsActivity extends CustomFragment{
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ctx = getContext();
+        locService = LocalizationService.getInstance(getActivity());
     }
 
     private void configGmap(View rootView, Bundle savedInstanceState){
@@ -63,19 +64,28 @@ public class MapsActivity extends CustomFragment{
         googleMap = gMap;
         // get all brewers location;
         CacheManagerHelper cacheHelper = CacheManagerHelper.getInstance();
-        List<BeerLocation> brewersLocation = cacheHelper.getBrewers();
+        List<BrewerInfo> brewersLocation = cacheHelper.getBrewers();
         renderMap(brewersLocation);
     }
 
-    private void renderMap(List <BeerLocation> brewersLocation){
+    private void renderMap(List <BrewerInfo> brewersLocation){
         BitmapDescriptor beerIcon = BitmapDescriptorFactory.fromResource(R.drawable.icon_chop);
 
-        for (BeerLocation location:brewersLocation) {
+        for (BrewerInfo location:brewersLocation) {
             LatLng currentLatLng = new LatLng(location.getLatitude(), location.getLongitude());
             googleMap.addMarker(new MarkerOptions().position(currentLatLng).title(location.getBrewery()).icon(beerIcon));
         }
-        LatLng camaraLatLong = new LatLng(-34.364f, -58.223f);
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 4.0f));
+
+        Location camaraLocation = locService.getLastKnownLocation();
+        LatLng camaraLatLong;
+        if (camaraLocation != null && camaraLocation.getLongitude() != 0.0d){
+            camaraLatLong = new LatLng(camaraLocation.getLatitude(), camaraLocation.getLongitude());
+        }
+        else{
+            camaraLatLong = new LatLng(-34.5931964f, -58.4479855f);
+        }
+
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 11.0f));
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

@@ -2,8 +2,7 @@ package com.mgfdev.elcaminodelacerveza.helpers;
 
 import android.os.AsyncTask;
 
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
-import com.mgfdev.elcaminodelacerveza.dto.BrewerListItem;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
@@ -18,7 +17,6 @@ import java.util.List;
 public class CacheManagerHelper {
 
     private static Cache brewersCache = null;
-    private static Cache brewersCacheList = null;
     private static CacheManagerHelper instance = null;
 
     private CacheManagerHelper(){
@@ -31,7 +29,7 @@ public class CacheManagerHelper {
         return instance;
     }
 
-    public  void createBrewerCacheAsync(List <BeerLocation> beerLocations) {
+    public  void createBrewerCacheAsync(List <BrewerInfo> brewerInfos) {
         CacheAsyncTask createCacheAsync = new CacheAsyncTask();
         createCacheAsync.execute();
     }
@@ -40,18 +38,9 @@ public class CacheManagerHelper {
         createCache();
     }
 
-    public  void createBrewerCache(List <BeerLocation> beerLocations) {
+    public  void createBrewerCache(List <BrewerInfo> brewerInfos) {
         createCache();
-        addbrewersToCache(beerLocations);
-    }
-
-     public  void createBrewerList() {
-        createCacheList();
-    }
-
-    public  void createBrewerListCache(List <BeerLocation> beerLocations) {
-        createCacheList();
-        addbrewersToCache(beerLocations);
+        addbrewersToCache(brewerInfos);
     }
 
     private void createCache(){
@@ -61,86 +50,44 @@ public class CacheManagerHelper {
         brewersCache.initialise();
     }
 
-    private void createCacheList(){
-        CacheManager cacheManager = CacheManager.getInstance();
-        int twoDays = 2 * 24 * 60 * 60;
-        brewersCacheList = new Cache("brewerList", 2000, false, false, twoDays, twoDays);
-        brewersCacheList.initialise();
-    }
-    public List<BeerLocation> getBrewers() {
+    public List<BrewerInfo> getBrewers() {
         return getBrewers(null, null);
     }
 
-    public List<BeerLocation> getBrewers(String username, String password){
+    public List<BrewerInfo> getBrewers(String username, String password){
         boolean itsValid = brewersCache != null && brewersCache.getKeys().size() > 0 ? !brewersCache.get(brewersCache.getKeys().get(0)).isExpired(): false;
-        List <BeerLocation> beerLocations = null;
+        List <BrewerInfo> brewerInfos = null;
         if (itsValid){
-            beerLocations = getBeerlocations();
+            brewerInfos = getBeerlocations();
         }
-        return beerLocations;
+        return brewerInfos;
     }
 
-    private List <BeerLocation> getBeerlocations (){
+    private List <BrewerInfo> getBeerlocations (){
         List <String> keys = brewersCache.getKeys();
-        List <BeerLocation> beerLocations = new ArrayList<BeerLocation>();
+        List <BrewerInfo> brewerInfos = new ArrayList<BrewerInfo>();
         for (String key: keys) {
-            beerLocations.add ((BeerLocation)brewersCache.get(key).getObjectValue());
+            brewerInfos.add ((BrewerInfo)brewersCache.get(key).getObjectValue());
         }
-        return beerLocations;
+        return brewerInfos;
     }
 
-
-
-    public List<BrewerListItem> getBrewersList(String username, String password){
-        return getBrewersList(null,null);
-    }
-
-    public List<BrewerListItem> getBrewersList(String username, String password){
-        boolean itsValid = brewersCache != null && brewersCacheList.getKeys().size() > 0 ? !brewersCacheList.get(brewersCacheList.getKeys().get(0)).isExpired(): false;
-        List <BrewerListItem> beerLocations = null;
-        if (itsValid){
-            beerLocations = getBrewersListItems();
-        }
-        return beerLocations;
-    }
-
-    private List <BrewerListItem> getBrewersListItems (){
-        List <String> keys = brewersCache.getKeys();
-        List <BrewerListItem> brewersList = new ArrayList<BrewerListItem>();
-        for (String key: keys) {
-            brewersList.add ((BrewerListItem)brewersCacheList.get(key).getObjectValue());
-        }
-        return brewersList;
-    }
-
-
-    public void addbrewersToCache(List <BeerLocation> beerLocations){
+    public void addbrewersToCache(List <BrewerInfo> brewerInfos){
         if (brewersCache != null){
-            for (BeerLocation location: beerLocations) {
+            for (BrewerInfo location: brewerInfos) {
                 Element singleElement = new Element(location.getBrewery(), location);
                 brewersCache.put(singleElement, false);
             }
         }
         else{
-            createBrewerCacheAsync(beerLocations);
-        }
-    }
-    public void addbrewersListToCache(List <BrewerListItem> brewers){
-        if (brewersCache != null){
-            for (BrewerListItem item: brewers) {
-                Element singleElement = new Element(item.getBrewerName(),item );
-                brewersCache.put(singleElement, false);
-            }
-        }
-        else{
-      //      createBrewerCacheAsync(brewers);
+            createBrewerCacheAsync(brewerInfos);
         }
     }
     class CacheAsyncTask extends AsyncTask<Void,Void,Void>{
-        private List<BeerLocation> beerLocations;
+        private List<BrewerInfo> brewerInfos;
 
-        public CacheAsyncTask (List<BeerLocation> beerLocations){
-            this.beerLocations = beerLocations;
+        public CacheAsyncTask (List<BrewerInfo> brewerInfos){
+            this.brewerInfos = brewerInfos;
         }
 
         public CacheAsyncTask () {
@@ -149,14 +96,13 @@ public class CacheManagerHelper {
             @Override
         protected Void doInBackground(Void... aVoid) {
             createCache();
-            createCacheList();
             return null;
         }
 
         @Override
         protected void onPostExecute(Void aVoid) {
-            if (beerLocations != null){
-                for (BeerLocation brewer:beerLocations){
+            if (brewerInfos != null){
+                for (BrewerInfo brewer: brewerInfos){
                     Element element = new Element(brewer.getBrewery(),brewer);
                     brewersCache.put(element);
                 }

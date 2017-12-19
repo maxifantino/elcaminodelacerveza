@@ -1,7 +1,6 @@
 package com.mgfdev.elcaminodelacerveza.services;
 
 import android.Manifest;
-import android.app.Application;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -13,20 +12,14 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.model.LatLng;
-import com.mgfdev.elcaminodelacerveza.data.BeerLocation;
-import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
 
 import java.util.List;
-import java.util.Timer;
-
-import com.mgfdev.elcaminodelacerveza.R;
-import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -81,26 +74,46 @@ public class LocalizationService {
         locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
       //  locationListener = new CustomLocationListener();
         CacheManagerHelper cacheBrewers = CacheManagerHelper.getInstance();
+        getLocationUpdates();
         populateProximityAlerts(cacheBrewers);
         IntentFilter filter = new IntentFilter(ACTION_PROXIMITY_ALERT);
         localizationObserver.registerReceiver(new LocationUpdateReceiver(), filter);
+
     }
+
+    public Location getLastKnownLocation() {
+        Location result = null;
+
+        boolean hasAccess = (ActivityCompat.checkSelfPermission(this.ctx, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) ||
+                (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED);
+        result = hasAccess ?  locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) :  null;
+        return result ;
+    }
+
 
     public void stop(){
 //        locationManager.removeUpdates(locationListener);
     }
     public void getLocationUpdates() {
+        Long meters = Long.parseLong(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"));
+        Long mins = Long.parseLong(SharedPreferenceManager.getInstance(ctx).getStringValue("mins"));
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }
-        //locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2, 300, locationListener);
-
+        if (meters < 200l){
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, mins, meters, locationListener);
+        }
+        else{
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, mins, meters, locationListener);
+        }
     }
 
     private void populateProximityAlerts(CacheManagerHelper cacheBrewers) {
-        List<BeerLocation> beerLocations = cacheBrewers.getBrewers();
+        List<BrewerInfo> brewerInfos = cacheBrewers.getBrewers();
         int meters = Integer.valueOf(StringUtils.defaultString(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"), Integer.toString(GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)));
-        for (BeerLocation item : beerLocations) {
+        for (BrewerInfo item : brewerInfos) {
             Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
             intent.putExtra("brewer", item.getBrewery());
             intent.putExtra("address", item.getAddress());
@@ -128,7 +141,7 @@ public class LocalizationService {
         intent.putExtra("brewer", "Lallal");
         PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
         //printDumy
-        BeerLocation item = beerLocations.get(0);
+        BrewerInfo item = brewerInfos.get(0);
         createNotification(ctx, item.getBrewery(),buildGMapsIntentExtra(item.getLatitude(), item.getLongitude()), item.getAddress());
 
          //end printDumy
@@ -158,7 +171,7 @@ public class LocalizationService {
 
         @Override
         public void onProviderDisabled(String provider) {
-
+            Toast.makeText(ctx,"Se perdio conexion",Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -12,12 +12,15 @@
             @style/PreferenceThemeOverlay.v14.Material
         </item>
     </style>
+
     <style name="my_preference_theme" parent="@style/PreferenceThemeOverlay">
         <item name="switchPreferenceCompatStyle">@style/preference_switch_compat</item>
     </style>
+
     <style name="preference_switch_compat">
         <item name="android:layout">@layout/preference_description</item>
     </style>
+
     <style name="Widget.TextView.ListSeparator" parent="@android:style/Widget.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -55,32 +58,39 @@
     <style name="menuTextStyle" parent="android:Widget.TextView">
         <item name="android:fontFamily">Monserrat</item>
     </style>
+
     <style name="WindowTitleBackground">
         <item name="android:background">@color/header2</item>
     </style>
+
     <style name="SplashActivty">
         <item name="android:layout_width">100dp</item>
         <item name="android:layout_height">100dp</item>
     </style>
+
     <style name="settingsTitleStyle">
         <item name="android:textColor">@color/titleFontColor</item>
         <item name="android:textSize">42dp</item>
     </style>
+
     <style name="settingsDescriptionStyle">
         <item name="android:textColor">@color/descriptionFontColor</item>
         <item name="android:textSize">8dp</item>
     </style>
+
     <style name="loginTextFieldsStyle">
         <item name="android:textColor">@color/darkWhite</item>
         <item name="android:textSize">22dp</item>
         <item name="android:textColorHint">@color/darkWhite</item>
     </style>
+
     <style name="loginSignUpStyle">
         <item name="android:textColor">@color/darkWhite</item>
         <item name="android:textSize">18dp</item>
         <item name="android:textColorHint">@color/darkWhite</item>
 
     </style>
+
     <style name="loadingStyle">
         <item name="android:textColor">@color/lightWhite</item>
         <item name="android:textSize">18dp</item>
@@ -89,5 +99,9 @@
     <style name="PreferencesTheme">
         <item name="android:background">#FFEAEAEA</item>
     </style>
+
+    <style name="AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 
 </resources>

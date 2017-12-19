@@ -25,6 +25,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
@@ -167,6 +169,8 @@ public class PassportFragment extends CustomFragment{
         FontHelper.overrideFonts(ctx, container
                 , "montserrat.ttf");
         populateListAdapter(rootView);
+        TextView passportTextView = (TextView)rootView.findViewById(R.id.passportTextView);
+        //passportTextView.setText(MessageFormat.format(getString(R.string.passportbelongstitle), user.getUsername()));
         return rootView;
     }
     private void setupScanButton(View rootView){
@@ -177,6 +181,13 @@ public class PassportFragment extends CustomFragment{
             public void onClick(View v) {
                 getQr();
             }
+        });
+        scanBreweButton.setOnLongClickListener( new View.OnLongClickListener() {
+            public boolean onLongClick(View v) {
+                Toast.makeText(v.getContext(), getString(R.string.passport_title_message), Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
         });
     }
 

@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.widget.TextView;
@@ -52,7 +53,8 @@ public class LocalizationService {
         return instance;
     }
 
-    public boolean isLocationActive() {
+    // Al menos en android 7, a veces devuelve true aun cuando el gps está apagado, causando mala experiencia usuario.
+    public boolean isLocationActive2() {
         LocationManager lm = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
         boolean gps_enabled = false;
         boolean network_enabled = false;
@@ -69,15 +71,23 @@ public class LocalizationService {
 
         return gps_enabled || network_enabled;
     }
+    // workaround bug android
+
+    public boolean isLocationActive() {
+     return getLastKnownLocation() != null;
+    }
 
     public void init() {
-        locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        if (locationManager == null){
+            locationManager = (LocationManager) ctx.getSystemService(Context.LOCATION_SERVICE);
+        }
+
       //  locationListener = new CustomLocationListener();
-        CacheManagerHelper cacheBrewers = CacheManagerHelper.getInstance();
-        getLocationUpdates();
-        populateProximityAlerts(cacheBrewers);
-        IntentFilter filter = new IntentFilter(ACTION_PROXIMITY_ALERT);
-        localizationObserver.registerReceiver(new LocationUpdateReceiver(), filter);
+    //    CacheManagerHelper cacheBrewers = CacheManagerHelper.getInstance();
+     //   getLocationUpdates();
+      //  populateProximityAlerts(cacheBrewers);
+       // IntentFilter filter = new IntentFilter(ACTION_PROXIMITY_ALERT);
+       // localizationObserver.registerReceiver(new LocationUpdateReceiver(), filter);
 
     }
 
@@ -89,6 +99,9 @@ public class LocalizationService {
                 (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED);
         result = hasAccess ?  locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) :  null;
+        if (result == null){
+            result =  locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        }
         return result ;
     }
 
@@ -98,7 +111,7 @@ public class LocalizationService {
     }
     public void getLocationUpdates() {
         Long meters = Long.parseLong(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"));
-        Long mins = Long.parseLong(SharedPreferenceManager.getInstance(ctx).getStringValue("mins"));
+        Long mins = Long.parseLong(SharedPreferenceManager.getInstance(ctx).getStringValue("time"));
         if (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             return;
         }

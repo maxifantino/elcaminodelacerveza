@@ -83,6 +83,17 @@ public class CacheManagerHelper {
             createBrewerCacheAsync(brewerInfos);
         }
     }
+
+    public BrewerInfo getBrewerById(String id){
+        List<BrewerInfo> brewers = getBrewers();
+        for (BrewerInfo item: brewers) {
+            if (item.getBrewery().equalsIgnoreCase(id)){
+                return item;
+            }
+        }
+        return null;
+    }
+
     class CacheAsyncTask extends AsyncTask<Void,Void,Void>{
         private List<BrewerInfo> brewerInfos;
 

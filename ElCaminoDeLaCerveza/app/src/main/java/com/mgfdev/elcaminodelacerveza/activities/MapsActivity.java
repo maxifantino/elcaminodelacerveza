@@ -85,7 +85,7 @@ public class MapsActivity extends CustomFragment{
             camaraLatLong = new LatLng(-34.5931964f, -58.4479855f);
         }
 
-        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 11.0f));
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(camaraLatLong, 12.0f));
     }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

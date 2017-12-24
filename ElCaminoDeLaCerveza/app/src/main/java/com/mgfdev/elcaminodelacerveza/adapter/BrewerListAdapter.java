@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -90,7 +91,7 @@ public class BrewerListAdapter extends ArrayAdapter<BrewerInfo> {
         holder.txtTitle.setText(currentItem.getBrewery());
         holder.txtAddress.setText("Direccion: " + currentItem.getAddress());
         vi.setTag(holder);
-        ImageButton arrow = (ImageButton) vi.findViewById(R.id.detailImageButton);
+        ImageView arrow = (ImageView) vi.findViewById(R.id.detailImageButton);
         arrow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

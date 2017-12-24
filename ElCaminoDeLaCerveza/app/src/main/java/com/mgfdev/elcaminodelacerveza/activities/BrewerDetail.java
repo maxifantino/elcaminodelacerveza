@@ -61,6 +61,9 @@ public class BrewerDetail  extends FragmentActivity {
         banner = (ImageView) findViewById(R.id.detailImage);
     }
 
+    private void setAsLink(TextView txt, String content){
+        txt.setText( content );
+    }
     private void populateViews( BrewerInfo data){
         title.setText(data.getBrewery());
 
@@ -73,11 +76,9 @@ public class BrewerDetail  extends FragmentActivity {
         address.setText(data.getAddress());
         phone.setText(data.getPhone());
         instagramLink.setMovementMethod(LinkMovementMethod.getInstance());
-        instagramLink.setText(data.getInstagram());
-        facebookLink.setMovementMethod(LinkMovementMethod.getInstance());
-        facebookLink.setText(data.getFacebook());
-        twitterLink.setMovementMethod(LinkMovementMethod.getInstance());
-        twitterLink.setText(data.getTwitter());
+        setAsLink(instagramLink,data.getInstagram() );
+        setAsLink(facebookLink,data.getFacebook() );
+        setAsLink(twitterLink,data.getTwitter() );
         Picasso.with(this).load(data.getDetailImages()).into(banner);
 
     }

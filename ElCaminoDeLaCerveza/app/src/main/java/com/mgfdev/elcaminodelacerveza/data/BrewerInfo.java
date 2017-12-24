@@ -19,6 +19,15 @@ public class BrewerInfo implements Serializable{
     private String content;
     private String detailImages;
 
+    public BrewerInfo(){
+        brewery = "";
+        address = "";
+        phone = "";
+        facebook ="";
+        instagram = "";
+        twitter = "";
+        content = "";
+    }
     public String getFacebook() {
         return facebook;
     }

@@ -10,6 +10,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.SeekBarPreference;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.adapter.CustomSwitchPreference;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
 import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 import com.mgfdev.elcaminodelacerveza.services.SharedPreferenceManager;
@@ -36,14 +39,14 @@ import java.util.Map;
  * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SettingsFragment extends PreferenceFragmentCompat {
+public class SettingsFragment extends PreferenceFragmentCompat implements CustomObserver{
 
     private OnFragmentInteractionListener mListener;
     private Context ctx;
     private User user;
     private SwitchPreferenceCompat closeSessionBtn;
-    private Preference metersSeekBar;
-    private Preference  timeSeekBar;
+    private SeekBarPreference metersSeekBar;
+    private SeekBarPreference  timeSeekBar;
     private TextView metersText;
     private TextView timeText;
     private View layoutMeters;
@@ -71,8 +74,15 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         user = activity.getUser();
         sharedPreferences = SharedPreferenceManager.getInstance(activity);
         addPreferencesFromResource(R.xml.fragment_settings2);
+
+
     }
 
+    private void forceStorePreferences(){
+        sharedPreferences.storeValue("meters", Integer.toString(metersSeekBar.getValue()));
+        sharedPreferences.storeValue("time", Integer.toString(timeSeekBar.getValue()));
+
+    }
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
 
@@ -83,6 +93,8 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
         view.setBackgroundColor(getResources().getColor(R.color.preferenceBackground,null));
         setupLayoutViews(view);
+        // TODO: VER porque no actualiza sharedPreferences... Fuerzo actualizacion
+        forceStorePreferences();
         return view;
     }
     private void setupLayoutViews(View rootView){
@@ -99,8 +111,9 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private void setupSwitchButtons(View rootView,  Map<String, String> config){
         locationButton = (SwitchPreferenceCompat) findPreference("location");
-        locationButton.setDefaultValue(true);
+        locationButton.setChecked(Boolean.parseBoolean(SharedPreferenceManager.getInstance(ctx).getStringValue("location")));
         setLocationLayoutState (locationButton.isChecked());
+        activity.attachSettingsObserver(this);
         locationButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
@@ -111,6 +124,12 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         });
     }
 
+
+    public void enableLocationFrame (boolean enabled){
+        setLocationLayoutState(enabled);
+        locationButton.setChecked(enabled);
+    }
+
     private void setLocationLayoutState (boolean enabled){
         metersSeekBar.setEnabled(enabled);
         timeSeekBar.setEnabled(enabled);
@@ -119,7 +138,7 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     private Map getPreferencesValues(){
         Map<String, String> result = new HashMap<String, String>();
         result.put("meters",StringUtils.defaultString(sharedPreferences.getStringValue("meters"),Integer.toString(GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)));
-        result.put("mins",StringUtils.defaultString(sharedPreferences.getStringValue("mins"),"0"));
+        result.put("time",StringUtils.defaultString(sharedPreferences.getStringValue("time"),"0"));
         result.put("location",StringUtils.defaultString(sharedPreferences.getStringValue("location"), "false"));
 
         return result;
@@ -127,10 +146,10 @@ public class SettingsFragment extends PreferenceFragmentCompat {
 
     private void setupSeekBars(View rootView,  Map<String, String> config){
         // get sharedPreferenceValues
-        metersSeekBar = (Preference) findPreference("meters");
-        timeSeekBar= (Preference) findPreference("time");
-        metersSeekBar.setDefaultValue(Integer.parseInt(config.get("meters")));
-        timeSeekBar.setDefaultValue(Integer.parseInt(config.get("mins")));
+        metersSeekBar = (SeekBarPreference) findPreference("meters");
+        timeSeekBar= (SeekBarPreference) findPreference("time");
+    //    metersSeekBar.setDefaultValue(Integer.parseInt(config.get("meters")));
+    //    timeSeekBar.setDefaultValue(Integer.parseInt(config.get("time")));
     }
 
     private void setupCloseSessionButton ( View rootView){
@@ -191,6 +210,16 @@ public class SettingsFragment extends PreferenceFragmentCompat {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void notifyEvent(int eventId) {
+        if (eventId == AppConstants.SETTINGS_LOCATION_OFF){
+            enableLocationFrame(false);
+        }
+        else if (eventId == AppConstants.SETTINGS_LOCATION_ON){
+            enableLocationFrame(true);
+        }
     }
 
     public interface OnFragmentInteractionListener {

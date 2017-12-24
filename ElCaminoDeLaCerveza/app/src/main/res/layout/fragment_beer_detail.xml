@@ -7,7 +7,7 @@
     android:layout_height="match_parent">
 
 <LinearLayout
-    android:orientation="vertical" android:layout_width="wrap_content"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:background="@drawable/list_selector"
     android:layout_height="wrap_content">
 
@@ -15,59 +15,135 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:layout_margin="20dp"
+        android:layout_gravity="center_horizontal"
+        style="@style/beerDetailTitle"
+        android:layout_margin="10dp"
         android:id="@+id/beerDetailTitle"/>
 
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="20dp"
+        android:layout_margin="10dp"
 
         android:id="@+id/detailImage"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="200dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="8dp"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/beerDetailAddress"/>
+                android:text="@string/direccion"
+                style="@style/beerDetailItemTitle"
+                android:id="@+id/addressTitle"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/beerDetailPhone"/>
+                style="@style/beerDetailItemDescription"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/beerDetailAddress"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="200dp"
+            android:orientation="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="8dp"
             android:layout_height="wrap_content">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/beerDetailFacebook"/>
+                android:text="@string/telefono"
+                style="@style/beerDetailItemTitle"
+                android:id="@+id/phoneTitle"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/beerDetailInstagram"/>
+                style="@style/beerDetailItemDescription"
+                android:layout_marginLeft="5dp"
+                android:id="@+id/beerDetailPhone"/>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/beerDetailTwitter"/>
 
 
         </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/facebook_icon"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:gravity="center_vertical"
+            android:layout_gravity="center_vertical"
+            android:autoLink="all"
+            style="@style/settingsBeerMediaTitle"
+            android:id="@+id/beerDetailFacebook"/>
+
+
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginBottom="8dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/instagram_icon"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:autoLink="all"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                style="@style/settingsBeerMediaTitle"
+                android:id="@+id/beerDetailInstagram"/>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="15dp"
+
+        android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/twitter_icon"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:autoLink="all"
+                android:gravity="center_vertical"
+                android:layout_gravity="center_vertical"
+                style="@style/settingsBeerMediaTitle"
+                android:id="@+id/beerDetailTwitter"/>
     </LinearLayout>
+    </LinearLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -77,11 +153,13 @@
 
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapViewDetail"
-        android:layout_width="wrap_content"
+        android:layout_width="400dp"
+        android:gravity="center_horizontal"
+        android:layout_gravity="center_horizontal"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-
-        android:layout_height="wrap_content" />
+        android:layout_marginBottom="15dp"
+        android:layout_height="250dp" />
 
 </LinearLayout>
 </ScrollView>

@@ -1,6 +1,7 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -9,27 +10,50 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.Geofence;
+//import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.AndroidCheckHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
 import com.mgfdev.elcaminodelacerveza.helpers.BottomNavigationViewHelper;
+import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
+import com.mgfdev.elcaminodelacerveza.services.BrewerGeofencesService;
 import com.mgfdev.elcaminodelacerveza.services.CustomCommand;
+import com.mgfdev.elcaminodelacerveza.services.GeofenceTransitionsIntentService;
+import com.mgfdev.elcaminodelacerveza.services.GeofenceWrapperService;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.SharedPreferenceManager;
 
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.List;
+
 import static java.lang.Thread.sleep;
 
-public class HomeActivity extends FragmentActivity implements ActionObserver {
+public class HomeActivity extends FragmentActivity implements ActionObserver{
 
     private User user;
     private SharedPreferenceManager sharedPreferences;
@@ -37,6 +61,14 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
     private Context ctx;
     private Activity activity;
     private CustomFragment passportObserver;
+    private CustomObserver settingsObserver;
+    private GoogleApiClient mGoogleApiClient;
+    private List<BrewerInfo> brewers;
+    private LocationRequest mLocationRequest;
+    private PendingIntent mGeofencePendingIntent;
+   // private GeofencingClient mGeofencingClient;
+   // private LocationClient locationClient;
+    private BrewerGeofencesService geofencesService;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -75,6 +107,10 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         this.passportObserver = observer;
     }
 
+    public void attachSettingsObserver(CustomObserver observer){
+        this.settingsObserver = observer;
+    }
+
     public User getUser() {
         if (user == null) {
             user = (User) getIntent().getSerializableExtra("USER");
@@ -91,6 +127,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         brewersLayout.setVisibility(View.INVISIBLE);
         View passportLayout = findViewById(R.id.passportLayout);
         passportLayout.setVisibility(View.INVISIBLE);
+        //LocationServices.GeofencingApi.addGeofences()
     }
 
     @Override
@@ -112,30 +149,50 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         ctx = this.getApplicationContext();
         user = (User) getIntent().getSerializableExtra("USER");
         sharedPreferences = SharedPreferenceManager.getInstance(this);
-        setLocationUpdates(getLocationSwitch());
+        brewers = CacheManagerHelper.getInstance().getBrewers();
         setAllLayoutsInvisible();
         View layout = findViewById(R.id.mapsLayout);
         layout.setVisibility(View.VISIBLE);
         activity = this;
+        setLocationUpdates(getLocationSwitch());
+
     }
 
-
+  /*  private void buildApiClient(){
+        int resp = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (resp == ConnectionResult.SUCCESS) {
+            locationClient = new GeofencingClient(ctx);
+            locationClient.connect();
+        }
+    }
+*/
     private boolean getLocationSwitch() {
         return Boolean.parseBoolean(sharedPreferences.getStringValue("location"));
     }
 
     @Override
     public void setLocationUpdates(Boolean activate) {
+        Log.i("Location", "Location status: " + activate);
         localizationService = LocalizationService.getInstance(this);
         localizationService.init();
+        geofencesService = BrewerGeofencesService.getInstance(this, brewers);
+
+        if (!getLocationSwitch()){
+            showYesNoDialog(this, getString(R.string.activateLocationTitle), getString(R.string.activateLocationDescription),
+                    getString(R.string.activate), getString(R.string.cancel));
+        }
         if (activate) {
             boolean result = localizationService.isLocationActive();
             if (!result) {
                 showYesNoDialog(this, getString(R.string.activateLocationTitle), getString(R.string.activateLocationDescription),
                         getString(R.string.activate), getString(R.string.cancel));
             }
+            else{
+                geofencesService.startGeofencing();
+            }
         } else {
             localizationService.stop();
+            geofencesService.stopGeofencing();
         }
     }
 
@@ -146,13 +203,13 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         dlgAlert.setPositiveButton(yesText, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS), AppConstants.LOCATION_SETTINGS_REQUEST_CODE);
-
             }
         });
 
         dlgAlert.setNegativeButton(noText, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 setLocationUpdates(false);
+                settingsObserver.notifyEvent(AppConstants.SETTINGS_LOCATION_OFF);
             }
         });
 
@@ -160,21 +217,15 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
         dlgAlert.create().show();
     }
 
-    @Override
-    public Intent registerReceiver(BroadcastReceiver receiver, IntentFilter filter) {
-        return super.registerReceiver(receiver, filter);
-    }
-
-    @Override
-    public void unregisterReceiver(BroadcastReceiver receiver) {
-        super.unregisterReceiver(receiver);
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         // por complemento ya que un bug en el qr scan pisa el requestCode.
         if (requestCode == AppConstants.LOCATION_SETTINGS_REQUEST_CODE){
             setLocationUpdates(true);
+            sharedPreferences.storeValue("location", "true");
+            settingsObserver.notifyEvent(AppConstants.SETTINGS_LOCATION_ON);
+         //   setupGeofences();
         }
         else{
             passportObserver.onActivityResult(requestCode, resultCode, intent);
@@ -205,4 +256,49 @@ public class HomeActivity extends FragmentActivity implements ActionObserver {
 
 
     }
+/*
+    private void setupGeofences(){
+        mGeofencingClient = LocationServices.getGeofencingClient(this);
+
+        List <Geofence>  geofences= GeofenceWrapperService.getInstance(ctx).buildGeofences(brewers);
+        registerGeofences(geofences);
+    }
+
+    private PendingIntent getGeofencePendingIntent() {
+        // Reuse the PendingIntent if we already have it.
+        if (mGeofencePendingIntent != null) {
+            return mGeofencePendingIntent;
+        }
+        Intent intent = new Intent(this, GeofenceTransitionsIntentService.class);
+        // We use FLAG_UPDATE_CURRENT so that we get the same pending intent back when
+        // calling addGeofences() and removeGeofences().
+        mGeofencePendingIntent = PendingIntent.getService(this, 0, intent, PendingIntent.
+                FLAG_UPDATE_CURRENT);
+        return mGeofencePendingIntent;
+    }
+
+    private void registerGeofences( List <Geofence>  geofences){
+        Log.i("registering","Abut to add geofences");
+        if (AndroidCheckHelper.checkLocationPermission(ctx)){
+            Log.i("registering","Permisions Checked");
+
+            mGeofencingClient.addGeofences(GeofenceWrapperService.getInstance(ctx).getGeofencingRequest(geofences),
+                getGeofencePendingIntent())
+                .addOnSuccessListener(this, new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.e("GEOFENCES", "geofenced successfully added");
+                    }
+                })
+                .addOnFailureListener(this, new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e("GEOFENCES", "Error loading geofencing");
+
+                    }
+                });
+        }
+    }
+
+*/
 }

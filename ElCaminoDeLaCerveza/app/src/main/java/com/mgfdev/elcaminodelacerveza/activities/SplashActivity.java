@@ -16,6 +16,7 @@ import android.widget.ProgressBar;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.AndroidCheckHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.ConnectionHelper;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
@@ -41,6 +42,9 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
         };
         r.run();
         showProgress(true);
+        if (!AndroidCheckHelper.checkLocationPermission(ctx)){
+            AndroidCheckHelper.requestLocationPermission(this);
+        }
     }
 
     private void populateCache(){

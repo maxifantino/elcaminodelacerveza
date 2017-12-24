@@ -35,7 +35,7 @@ public class SharedPreferenceManager {
             String aux =  pref.getString(key, "200");
             result = Integer.parseInt(aux)< 200 ? "200" : aux;
         }
-        else if (key.equals("mins")){
+        else if (key.equals("time")){
             result =  pref.getString(key, "5");
         }
         else if (key.equals("location")){

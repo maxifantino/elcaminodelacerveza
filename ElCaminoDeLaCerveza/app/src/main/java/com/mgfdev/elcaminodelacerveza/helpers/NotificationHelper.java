@@ -26,7 +26,7 @@ public class NotificationHelper {
         android.support.v4.app.NotificationCompat.Builder builder = new  android.support.v7.app.NotificationCompat.Builder(context)
                 .setContentTitle(context.getString(R.string.app_name))
                 .setContentText(message)
-                .setSmallIcon(R.drawable.icon_chop)
+                .setSmallIcon(R.drawable.logo_transparent_med)
                 .setAutoCancel(false)
                 .setContentIntent(pendingIntent)
                 .setStyle(new  android.support.v7.app.NotificationCompat.BigTextStyle().bigText(message))

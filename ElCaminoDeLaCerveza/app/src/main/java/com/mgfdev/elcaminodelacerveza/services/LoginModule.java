@@ -1,6 +1,7 @@
 package com.mgfdev.elcaminodelacerveza.services;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
 import com.mgfdev.elcaminodelacerveza.dto.User;
@@ -35,6 +36,25 @@ public class LoginModule {
         }
         return result;
     }
+
+
+    public void markUserAsLogged(Integer id){
+        ServiceDao serviceDao = new ServiceDao();
+        try{
+            serviceDao.markUserAsLogged(context, id);
+        }
+        catch (Exception e){
+            Log.e("LoginModule", "Error while marking user as logged" + e.getMessage());
+        }
+    }
+
+
+    public User getUser (String username){
+        ServiceDao serviceDao = new ServiceDao();
+
+        return serviceDao.getUser(context, username);
+    }
+
 
     public void saveCredentials (String username, String password){
         ServiceDao serviceDao = new ServiceDao();

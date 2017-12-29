@@ -6,4 +6,6 @@ package com.mgfdev.elcaminodelacerveza.activities;
 
 public interface CustomObserver {
     public void notifyEvent(int eventId);
+    public void refreshGeofences ();
+    public boolean isRefreshGeofences();
 }

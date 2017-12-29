@@ -169,7 +169,6 @@ public class PassportFragment extends CustomFragment{
         FontHelper.overrideFonts(ctx, container
                 , "montserrat.ttf");
         populateListAdapter(rootView);
-        TextView passportTextView = (TextView)rootView.findViewById(R.id.passportTextView);
         //passportTextView.setText(MessageFormat.format(getString(R.string.passportbelongstitle), user.getUsername()));
         return rootView;
     }

@@ -48,7 +48,7 @@ public class GeofenceTransitionsIntentService extends IntentService {
             // get fields by id
             BrewerInfo brewer = CacheManagerHelper.getInstance().getBrewerById(id);
             String craftName = brewer != null ? brewer.getBrewery() : "";
-            String craftUrl = brewer != null ? buildGMapsIntentExtra(brewer.getLatitude(), brewer.getLongitude()): "";
+            String craftUrl = brewer != null ? buildGMapsIntentExtra(brewer.getLatitude(), brewer.getLongitude(), brewer.getBrewery()): "";
             String craftAddress = brewer != null ? brewer.getAddress() : "";
 
             // Send notification and log the transition details.
@@ -59,8 +59,8 @@ public class GeofenceTransitionsIntentService extends IntentService {
         }
     }
 
-    private String buildGMapsIntentExtra(Double latitude, Double longitude){
-        String extra = "geo:" + Double.toString(latitude) + "," + Double.toString(longitude);
+    private String buildGMapsIntentExtra(Double latitude, Double longitude, String label){
+        String extra = "geo:0,0?q=" + Double.toString(latitude) + "," + Double.toString(longitude)+"(" +label +")";
         return extra;
     }
 

@@ -96,7 +96,7 @@
     <string name="location_meters">Radio</string>
     <string name="location_meters_description">Distancia en Metros</string>
     <string name="location_time">Intervalo</string>
-    <string name="location_time_description">Tiempo en minutos entre actualizaciones</string>
+    <string name="location_time_description">Tiempo en horas en el cual recibiras las notificaciones</string>
     <string name="session_title">Sesión</string>
     <string name="session_description">Estas registrado como {0}. ¿Cerrar sesion?</string>
     <string name="no_session_description">No hay usuario Registrado</string>
@@ -124,5 +124,6 @@
     <string name="title_item_list">Items</string>
     <string name="title_item_detail">Item Detail</string>
     <string name="direccion">Dirección:</string>
+    <string name="passport_title_message">Escanea las cervecerías para completar tu pasaporte digital.</string>
     <string name="telefono">Teléfono:</string>
 </resources>

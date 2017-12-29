@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseHelper extends SQLiteOpenHelper{
 
-	private static final String dbname = "caminodb.DB";
+	private static final String dbname = "caminodb2.DB";
 
 	public DataBaseHelper (Context context)
 	{
@@ -19,6 +19,7 @@ public class DataBaseHelper extends SQLiteOpenHelper{
 		String userTableScript = "CREATE TABLE USERS( " +
 				"user_id" + " integer primary key autoincrement, " +
 				"username" + " string ," +
+				"email" + " string ," +
 				"password" + " string, current_user  string)";
 
 		String passportTableScript = "CREATE TABLE PASSPORT( " +

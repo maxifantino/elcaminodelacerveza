@@ -9,6 +9,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.mgfdev.elcaminodelacerveza.dto.Passport;
 import com.mgfdev.elcaminodelacerveza.dto.User;
@@ -48,7 +49,27 @@ public class ServiceDao {
         return user;
     }
 
-    public boolean doLogout (Context ctx, User user){
+
+	public void markUserAsLogged (Context ctx, Integer id){
+		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		int result = -1;
+		String strFilter = (MessageFormat.format( "user_id={0}", "'" + id + "'"));
+		ContentValues args = new ContentValues();
+		args.put("current_user", "y");
+		try{
+			result = db.update("USERS", args, strFilter, null);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		dbHelper.close();
+		db.close();
+	}
+
+
+
+	public boolean doLogout (Context ctx, User user){
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		int result = -1;
@@ -70,23 +91,31 @@ public class ServiceDao {
 	{
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor mCursor = db.query(true, "USER",new String[]{"user_id", "username", "password"},"username="+ username,
-			null,
-			null,
-			null,
-			null,
-			null);
 		User user=null;
-		while (mCursor!= null && mCursor.getCount() > 0 && mCursor.moveToNext()){
-			user = new User();
-			user.setId(mCursor.getInt(0));
-			user.setUsername(mCursor.getString(1));
-			user.setPassword(mCursor.getString(2));
+		Cursor mCursor = null;
+		try{
+			mCursor = db.query(true, "USERS",new String[]{"user_id", "username", "password"},"username="+ "'" + username + "'",
+					null,
+					null,
+					null,
+					null,
+					null);
+			while (mCursor!= null && mCursor.getCount() > 0 && mCursor.moveToNext()){
+				user = new User();
+				user.setId(mCursor.getInt(0));
+				user.setUsername(mCursor.getString(1));
+				user.setPassword(mCursor.getString(2));
+			}
 		}
 
+		catch (Exception e) {
+			Log.e("serviceDao", "Error getting user " + e.getMessage());
+		}
 		dbHelper.close();
 		db.close();
-		mCursor.close();
+		if (mCursor !=null) {
+			mCursor.close();
+		}
 		return user;
 	}
 
@@ -104,6 +133,7 @@ public class ServiceDao {
 		}
 
         mCursor.close();
+		// check if user wasn't logged before
 
         // create new user
         ContentValues newRow = new ContentValues();

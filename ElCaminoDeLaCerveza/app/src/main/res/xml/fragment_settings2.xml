@@ -22,7 +22,8 @@
             android:defaultValue="5"
             android:id="@+id/minsSeekBarPreference"
             android:key="time"
-            android:max="60"
+            android:maxLines="4"
+            android:max="24"
             android:title="@string/location_time_description" />
 
     </PreferenceCategory>
@@ -31,6 +32,7 @@
     <PreferenceCategory android:title="@string/location_meters">
         <android.support.v7.preference.SeekBarPreference
             android:defaultValue="200"
+            android:maxLines="4"
             android:key="meters"
             android:id="@+id/metersSeekBarPreference"
             android:max="1000"

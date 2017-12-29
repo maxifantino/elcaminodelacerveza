@@ -12,6 +12,7 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.SeekBarPreference;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -55,8 +56,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
     private HomeActivity activity;
     private SwitchPreferenceCompat locationButton;
     private View rootView;
+    private boolean refreshGeofences = false;
     public SettingsFragment() {
         // Required empty public constructor
+    }
+
+    public boolean isRefreshGeofences() {
+        return refreshGeofences;
+    }
+    public void refreshGeofences(){
+        refreshGeofences = false;
     }
 
     public static SettingsFragment newInstance(String param1, String param2) {
@@ -133,6 +142,20 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
     private void setLocationLayoutState (boolean enabled){
         metersSeekBar.setEnabled(enabled);
         timeSeekBar.setEnabled(enabled);
+        timeSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                refreshGeofences = true;
+                return true;
+            }
+        });
+        metersSeekBar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                refreshGeofences = true;
+                return true;
+            }
+        });
     }
 
     private Map getPreferencesValues(){
@@ -173,6 +196,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
             public void onClick(DialogInterface dialog, int which) {
                 doLogout();
                 redirectLogin(ctx);
+                closeSessionBtn.setChecked(false);
             }
         });
 
@@ -229,5 +253,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
     private void doLogout(){
         LoginModule module = new LoginModule(ctx);
         module.doLogout(ctx, user);
+        closeSessionBtn.setChecked(false);
     }
 }

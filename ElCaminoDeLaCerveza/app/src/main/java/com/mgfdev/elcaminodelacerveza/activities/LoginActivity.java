@@ -351,8 +351,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 result =  false;
             }
             // save credentials
-            if (result) {
-                loginModule.saveCredentials(mEmail,mPassword);
+            if (result ) {
+                User user = loginModule.getUser(mEmail);
+                if (user == null) {
+                    loginModule.saveCredentials(mEmail,mPassword);
+                }
+                else{
+                    loginModule.markUserAsLogged(user.getId());
+                }
             }
             return result;
         }

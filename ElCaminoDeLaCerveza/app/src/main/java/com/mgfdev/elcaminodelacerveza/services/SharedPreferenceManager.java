@@ -36,7 +36,7 @@ public class SharedPreferenceManager {
             result = Integer.parseInt(aux)< 200 ? "200" : aux;
         }
         else if (key.equals("time")){
-            result =  pref.getString(key, "5");
+            result =  pref.getString(key, "10");
         }
         else if (key.equals("location")){
             result =  pref.getString(key, "false");

@@ -4,7 +4,12 @@ android {
     compileSdkVersion 25
     buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
-
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
+    defaultConfig {
+        multiDexEnabled true
+    }
     defaultConfig {
         applicationId "com.mgfdev.elcaminodelacerveza"
         minSdkVersion 23
@@ -30,6 +35,8 @@ allprojects {
         }
     }
 }
+
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {

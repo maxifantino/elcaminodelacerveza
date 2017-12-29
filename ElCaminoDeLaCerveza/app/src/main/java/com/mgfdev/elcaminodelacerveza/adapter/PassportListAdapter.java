@@ -44,7 +44,7 @@ public class PassportListAdapter extends ArrayAdapter<Brewer> {
             TextView tt2 = (TextView) v.findViewById(R.id.createdDateText);
 
             if (tt1 != null) {
-                tt1.setText("Cerveceria: " + p.getBrewerName());
+                tt1.setText(p.getBrewerName());
             }
 
             if (tt2 != null) {

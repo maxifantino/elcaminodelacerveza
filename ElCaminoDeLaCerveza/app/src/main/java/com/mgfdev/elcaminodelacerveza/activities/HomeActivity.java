@@ -99,6 +99,13 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
                     result = true;
                     break;
             }
+
+            if (settingsObserver.isRefreshGeofences()){
+                geofencesService.stopGeofencing();
+                geofencesService.startGeofencing();
+                settingsObserver.refreshGeofences();
+            }
+
             return result;
         }
     };

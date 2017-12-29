@@ -36,7 +36,7 @@ public class GeofenceWrapperService {
     public  List <Geofence> buildGeofences(List<BrewerInfo> brewers){
         List <Geofence> geofences = new ArrayList<Geofence>();
         Long meters = Long.parseLong( SharedPreferenceManager.getInstance(ctx).getStringValue("meters"));
-        Long miliseconds = 1000 *60 * Long.parseLong( SharedPreferenceManager.getInstance(ctx).getStringValue("time"));
+        Long miliseconds =   Long.parseLong(SharedPreferenceManager.getInstance(ctx).getStringValue("time")) * 1000 *60 *60;
 
         for (BrewerInfo beerlocation: brewers){
             geofences.add(new Geofence.Builder()

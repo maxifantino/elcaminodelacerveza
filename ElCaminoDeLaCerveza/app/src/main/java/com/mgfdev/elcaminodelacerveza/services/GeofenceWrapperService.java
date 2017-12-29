@@ -44,6 +44,7 @@ public class GeofenceWrapperService {
                     .setCircularRegion(beerlocation.getLatitude(), beerlocation.getLongitude(),meters)
                     .setExpirationDuration(miliseconds)
                     .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+                    .setNotificationResponsiveness(GeofencesConstants.RESPONSIVENESS )
                     .build());
         }
         return geofences;

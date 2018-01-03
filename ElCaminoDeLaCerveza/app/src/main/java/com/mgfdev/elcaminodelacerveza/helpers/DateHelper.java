@@ -11,6 +11,7 @@ import java.util.Date;
 public class DateHelper {
 
     private final static SimpleDateFormat dtFormat = new SimpleDateFormat("dd/MM/yyyy");
+    private final static SimpleDateFormat dtwordpressFormat = new SimpleDateFormat("dd-MM-yyyy");
 
     public static Date getDate (String stringDate){
         Date dt;
@@ -27,4 +28,7 @@ public class DateHelper {
         return dtFormat.format(dt);
     }
 
+    public static String getDateWordpress (Date dt){
+        return dtwordpressFormat.format(dt);
+    }
 }

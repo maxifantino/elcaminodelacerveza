@@ -62,14 +62,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     private View mProgressView;
     private View mLoginFormView;
     private Context context;
-    private LoginModule loginModule;
     private Activity currentActivity;
     private LocalizationService localizationService;
+    private LoginModule loginModule;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        loginModule = LoginModule.getInstance(this);
         FontHelper.overrideFonts(this, findViewById(android.R.id.content)
                 , "montserrat.ttf");
 
@@ -101,7 +102,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        loginModule = new LoginModule(context);
     }
 
     private void populateAutoComplete() {
@@ -205,7 +205,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
     private boolean isPasswordValid(String password) {
         //TODO: Replace this with your own logic
-        return password.length() > 4;
+        return password.length() > 3;
     }
 
     /**
@@ -352,12 +352,14 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             }
             // save credentials
             if (result ) {
-                User user = loginModule.getUser(mEmail);
-                if (user == null) {
-                    loginModule.saveCredentials(mEmail,mPassword);
+                User user = loginModule.getLoggedUser();
+                if (loginModule.isInDB(user.getUsername()) == null) {
+                    loginModule.saveInDb();
                 }
                 else{
                     loginModule.markUserAsLogged(user.getId());
+                    /// hook para el caso en donde el pasaporte debe popularse de internet.
+                    
                 }
             }
             return result;
@@ -370,7 +372,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent intent = new Intent(currentActivity, HomeActivity.class);
-                User user = loginModule.getLoggedUser(context);
+                User user = loginModule.getLoggedUser();
                 intent.putExtra("USER", user);
                 startActivity(intent);
 

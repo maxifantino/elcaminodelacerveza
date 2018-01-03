@@ -161,7 +161,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
         View layout = findViewById(R.id.mapsLayout);
         layout.setVisibility(View.VISIBLE);
         activity = this;
-        setLocationUpdates(getLocationSwitch());
+        setLocationUpdates(getLocationSwitch(),0);
 
     }
 
@@ -178,7 +178,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
     }
 
     @Override
-    public void setLocationUpdates(Boolean activate) {
+    public void setLocationUpdates(Boolean activate, int retries) {
         Log.i("Location", "Location status: " + activate);
         localizationService = LocalizationService.getInstance(this);
         localizationService.init();
@@ -190,12 +190,15 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
         }
         if (activate) {
             boolean result = localizationService.isLocationActive();
-            if (!result) {
+            if (!result && retries < 1) {
                 showYesNoDialog(this, getString(R.string.activateLocationTitle), getString(R.string.activateLocationDescription),
                         getString(R.string.activate), getString(R.string.cancel));
             }
-            else{
+            else if (result){
                 geofencesService.startGeofencing();
+            }
+            else{
+                Log.e("setLocationUpdates", "No se pudo encontrar aun una ubicación valida");
             }
         } else {
             localizationService.stop();
@@ -215,7 +218,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
 
         dlgAlert.setNegativeButton(noText, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                setLocationUpdates(false);
+                setLocationUpdates(false, 0);
                 settingsObserver.notifyEvent(AppConstants.SETTINGS_LOCATION_OFF);
             }
         });
@@ -229,7 +232,7 @@ public class HomeActivity extends FragmentActivity implements ActionObserver{
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         // por complemento ya que un bug en el qr scan pisa el requestCode.
         if (requestCode == AppConstants.LOCATION_SETTINGS_REQUEST_CODE){
-            setLocationUpdates(true);
+            setLocationUpdates(true, 1);
             sharedPreferences.storeValue("location", "true");
             settingsObserver.notifyEvent(AppConstants.SETTINGS_LOCATION_ON);
          //   setupGeofences();

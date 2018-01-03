@@ -27,10 +27,12 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
     private Context ctx;
     private Activity activity;
     private Integer totalImagesDownloaded = 0;
+    private LoginModule module;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         activity = this;
+        module =  LoginModule.getInstance(this);
         setContentView(R.layout.activity_splash);
         ctx = this;
         mProgressView = (ProgressBar) findViewById(R.id.splash_progress);
@@ -99,7 +101,7 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
 
     private void redirectLogin(Context ctx){
         // check if the user was logged before
-        LoginModule module = new LoginModule(ctx);
+
         User user = module.getLoggedUser(ctx);
         if (user != null){ // dirijo a HomeModule
             Intent intent = new Intent(this, HomeActivity.class);

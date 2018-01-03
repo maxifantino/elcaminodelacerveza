@@ -8,6 +8,8 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -83,7 +85,6 @@ public class CacheManagerHelper {
             createBrewerCacheAsync(brewerInfos);
         }
     }
-
     public BrewerInfo getBrewerById(String id){
         List<BrewerInfo> brewers = getBrewers();
         for (BrewerInfo item: brewers) {

@@ -1,5 +1,8 @@
 package com.mgfdev.elcaminodelacerveza.dto;
 
+import org.apache.commons.lang3.time.DateUtils;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -10,11 +13,25 @@ import java.util.Map;
 
 public class Passport {
     private User user;
-    private Map<String, Date> brewers;
+    private List<PassportItem> brewers;
 
-    public void addBrewer(String brewer){
-        if (brewers.get(brewer) == null){
-            brewers.put(brewer, new Date());
+    public Passport(){
+        brewers = new ArrayList<PassportItem>();
+    }
+
+    public void addBrewer(String brewer) {
+        addBrewer(brewer, new Date());
+    }
+
+
+    public void addBrewer(String brewer, Date dt) {
+        PassportItem item = findItemBy(brewer);
+        if (item == null){
+            item = new PassportItem(brewer, new Date());
+            brewers.add(item);
+        }
+        else{
+            item.addVisit(new Date());
         }
     }
 
@@ -26,11 +43,30 @@ public class Passport {
         this.user = user;
     }
 
-    public Map<String, Date> getBrewers() {
+    public List<PassportItem> getBrewers() {
         return brewers;
     }
 
-    public void setBrewers(Map<String, Date> brewers) {
+    public void setBrewers(List<PassportItem> brewers) {
         this.brewers = brewers;
+    }
+
+    public PassportItem findItemBy(String brewerName) {
+        PassportItem foundItem = null;
+        for (PassportItem item : brewers) {
+            if (brewerName.equalsIgnoreCase(item.getBrewerName())) {
+                foundItem = item;
+            }
+        }
+        return foundItem;
+    }
+
+    public boolean wasRegisteredToday(String brewerName) {
+        for (PassportItem item : brewers) {
+            if (brewerName.equalsIgnoreCase(item.getBrewerName()) && DateUtils.isSameDay(item.getLastVisit(), new Date())) {
+                return true;
+            }
+        }
+        return false;
     }
 }

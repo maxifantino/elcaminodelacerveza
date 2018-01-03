@@ -10,4 +10,5 @@ public class AppConstants {
     public static final int SETTINGS_LOCATION_OFF = 100;
     public static final int SETTINGS_LOCATION_ON = 101;
     public static final int REFRESH_GEOFENCES = 102;
+    public static final int PASSPORT_LOCATION_TOLERANCE = 900;
 }

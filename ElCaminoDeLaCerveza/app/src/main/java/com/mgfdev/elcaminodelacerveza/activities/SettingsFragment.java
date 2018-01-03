@@ -60,6 +60,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
     public SettingsFragment() {
         // Required empty public constructor
     }
+    private LoginModule module;
 
     public boolean isRefreshGeofences() {
         return refreshGeofences;
@@ -83,8 +84,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
         user = activity.getUser();
         sharedPreferences = SharedPreferenceManager.getInstance(activity);
         addPreferencesFromResource(R.xml.fragment_settings2);
-
-
+        module =  LoginModule.getInstance(ctx);
     }
 
     private void forceStorePreferences(){
@@ -126,7 +126,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
         locationButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
             @Override
             public boolean onPreferenceClick(Preference preference) {
-                activity.setLocationUpdates(locationButton.isChecked());
+                activity.setLocationUpdates(locationButton.isChecked(),0);
                 setLocationLayoutState (locationButton.isChecked());
                 return true;
             }
@@ -251,7 +251,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
         void onFragmentInteraction(Uri uri);
     }
     private void doLogout(){
-        LoginModule module = new LoginModule(ctx);
         module.doLogout(ctx, user);
         closeSessionBtn.setChecked(false);
     }

@@ -1,55 +1,45 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.Location;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.FileProvider;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListViewCompat;
-import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
-import com.mgfdev.elcaminodelacerveza.BuildConfig;
 import com.mgfdev.elcaminodelacerveza.R;
-import com.mgfdev.elcaminodelacerveza.adapter.PassportAdapter;
 import com.mgfdev.elcaminodelacerveza.adapter.PassportListAdapter;
 import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
-import com.mgfdev.elcaminodelacerveza.dto.Brewer;
+import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.dto.Passport;
+import com.mgfdev.elcaminodelacerveza.dto.PassportItem;
 import com.mgfdev.elcaminodelacerveza.dto.User;
+import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
+import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.provider.IntentIntegrator;
 import com.mgfdev.elcaminodelacerveza.provider.IntentResult;
 import com.mgfdev.elcaminodelacerveza.services.BrewerHelperService;
+import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.PassportService;
+import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -69,8 +59,6 @@ public class PassportFragment extends CustomFragment{
     private Button scanBreweButton;
     private ListViewCompat passportList;
     private Passport passport;
-    private List<String> passportStringList;
-    private ArrayAdapter<String> adapter;
     private static final int QR_CODE_SCAN = 1;
     private static final int PHOTO_REQUEST = 10;
     private HomeActivity activity;
@@ -111,9 +99,7 @@ public class PassportFragment extends CustomFragment{
 
     public void populateListAdapter(View rootView){
         passportListView = (ListView) rootView.findViewById(R.id.passportListView);
-
-        List<Brewer> brewers = PassportAdapter.toBrewerList(passport.getBrewers());
-        customAdapter = new PassportListAdapter(ctx, R.layout.passport_list_row, brewers);
+        customAdapter = new PassportListAdapter(ctx, R.layout.passport_list_row, passport.getBrewers());
         passportListView .setAdapter(customAdapter);
     }
 
@@ -126,20 +112,39 @@ public class PassportFragment extends CustomFragment{
     private void processQRResult(String brewerResult){
         BrewerHelperService helperService = new BrewerHelperService();
         boolean isValid = helperService.isValidBrewer(brewerResult, activity.getUser().getUsername(), activity.getUser().getPassword());
-        if (isValid && notInPassport(brewerResult)){
-            addBrewerToPassport(brewerResult);
-            passportStringList.add(brewerResult);
-            adapter.notifyDataSetChanged();
-        } else{
+        if (!isValid ) {
             MessageDialogHelper
-                    .showErrorMessage(activity,getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_not_found_message), brewerResult ));
+                    .showErrorMessage(activity, getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_not_found_message), brewerResult));
+            return ;
+        }
+        // verifico location
+        LocalizationService locationService = LocalizationService.getInstance(activity);
+        Location lastLocation = locationService.getLastKnownLocation();
+
+        if (lastLocation == null) {
+            MessageDialogHelper
+                    .showErrorMessage(activity, getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_couldnt_find_location), brewerResult));
+            return ;
+        }
+ /*       if (passport.wasRegisteredToday(brewerResult)){
+            MessageDialogHelper
+                    .showErrorMessage(activity, getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_already_registered_today), brewerResult));
+            return ;
+
+        }
+   */     BrewerInfo breweInfo = CacheManagerHelper.getInstance().getBrewerById(brewerResult);
+        if (locationService.nearby(locationService.locationFactory(breweInfo.getLatitude(), breweInfo.getLongitude()),
+        lastLocation, AppConstants.PASSPORT_LOCATION_TOLERANCE)){
+            addBrewerToPassport(brewerResult);
+            customAdapter.notifyDataSetChanged();
+            postPassportUpdateAsync(brewerResult);
+
+        }
+        else{
+            MessageDialogHelper
+                    .showErrorMessage(activity, getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_not_location_message), brewerResult));
         }
     }
-    private boolean notInPassport(String brewer) {
-        checkPassport();
-        return !passport.getBrewers().keySet().contains(brewer);
-    }
-
     private void checkPassport(){
         if (passport == null){
             populatePassport();
@@ -149,8 +154,9 @@ public class PassportFragment extends CustomFragment{
         checkPassport();
         passport.addBrewer(brewer);
         ServiceDao dao = new ServiceDao();
-        dao.savePassportItem(ctx, user.getId(), brewer);
-        customAdapter.add(new Brewer(brewer, new Date()));
+        long passportId = dao.savePassportItem(ctx, user.getId(), brewer);
+
+      //  customAdapter.add(new PassportItem(brewer, new Date()));
         customAdapter.notifyDataSetChanged();
     }
 
@@ -194,8 +200,6 @@ public class PassportFragment extends CustomFragment{
         IntentIntegrator integrator = new IntentIntegrator(this);
         integrator.initiateScan();
     }
-
-
 
     private void launchMediaScanIntent() {
         Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -258,13 +262,23 @@ public class PassportFragment extends CustomFragment{
     }
 
     private void populatePassportList (Passport passport){
-        passportStringList = new ArrayList<String>();
-        for (String brewer : passport.getBrewers().keySet()){
-            passportStringList.add (brewer);
-        }
-        adapter=new ArrayAdapter<String>(ctx,
-                android.R.layout.simple_list_item_1,
-                passportStringList);
     }
 
+    private void postPassportUpdateAsync(final String brewername){
+        final WordpressApiService  apiService = new WordpressApiService();
+        new Thread(new Runnable() {
+            public void run() {
+               boolean result = apiService.postPassportNews(user.getUsername(), brewername, new Date());
+               if (!result){
+
+                   activity.runOnUiThread(new Runnable() {
+                       public void run() {
+                           MessageDialogHelper
+                                   .showErrorMessage(activity, getString(R.string.brewer_not_found_title),getString(R.string.cant_syncronize_passport));      }
+                   });
+
+               }
+            }
+        }).start();
+    }
 }

@@ -15,7 +15,7 @@ public class CustomFragment extends Fragment implements ActionObserver {
     }
 
     @Override
-    public void setLocationUpdates(Boolean activate) {
+    public void setLocationUpdates(Boolean activate, int retries) {
 
     }
 }

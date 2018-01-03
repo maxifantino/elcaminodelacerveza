@@ -2,27 +2,23 @@ package com.mgfdev.elcaminodelacerveza.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.adapter.BrewerListAdapter;
 
 import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
-import com.mgfdev.elcaminodelacerveza.dto.Brewer;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 
-import org.apache.commons.lang3.StringUtils;
-
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -100,9 +96,24 @@ public class BrewerFragment extends CustomFragment {
     public void populateListAdapter(View rootView){
         brewersListView = (ListView) rootView.findViewById(R.id.brewerListView);
 
+        Collections.sort(brewers, new BrewerInfoComparator());
+
         customAdapter = new BrewerListAdapter(ctx, R.layout.brewer_list_row, brewers);
         brewersListView .setAdapter(customAdapter);
+
     }
+
+
+
+    private class BrewerInfoComparator implements Comparator<BrewerInfo> {
+
+        @Override
+        public int compare(BrewerInfo o1, BrewerInfo o2) {
+            return o1.getBrewery().compareTo(o2.getBrewery());
+        }
+    }
+
+
 
     @Override
     public void onAttach(Context context) {

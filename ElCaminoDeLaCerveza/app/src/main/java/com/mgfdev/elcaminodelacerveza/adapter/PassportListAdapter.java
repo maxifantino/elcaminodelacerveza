@@ -1,6 +1,8 @@
 package com.mgfdev.elcaminodelacerveza.adapter;
 
 import android.content.Context;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,20 +10,19 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.mgfdev.elcaminodelacerveza.R;
-import com.mgfdev.elcaminodelacerveza.dto.Brewer;
+import com.mgfdev.elcaminodelacerveza.dto.PassportItem;
 import com.mgfdev.elcaminodelacerveza.helpers.DateHelper;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Maxi on 10/12/2017.
  */
 
-public class PassportListAdapter extends ArrayAdapter<Brewer> {
+public class PassportListAdapter extends ArrayAdapter<PassportItem> {
 
     private int layoutResourceId;
-    public PassportListAdapter(Context context, int layoutResourceId, List<Brewer> items) {
+    public PassportListAdapter(Context context, int layoutResourceId, List<PassportItem> items) {
         super(context, layoutResourceId, items);
         this.layoutResourceId = layoutResourceId;
     }
@@ -37,7 +38,7 @@ public class PassportListAdapter extends ArrayAdapter<Brewer> {
             v = vi.inflate(layoutResourceId, null);
         }
 
-        Brewer p = getItem(position);
+        PassportItem p = getItem(position);
 
         if (p != null) {
             TextView tt1 = (TextView) v.findViewById(R.id.brewerNameText);
@@ -48,7 +49,11 @@ public class PassportListAdapter extends ArrayAdapter<Brewer> {
             }
 
             if (tt2 != null) {
-                tt2.setText("Fecha: " + DateHelper.getDate(p.getDateCreated()));
+                SpannableStringBuilder str = new SpannableStringBuilder("Visitas: " + p.getVisitsCount() +" . Última: " + DateHelper.getDate(p.getLastVisit()));
+                str.setSpan(new android.text.style.StyleSpan(android.graphics.Typeface.BOLD), 0, 7,
+                        Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                tt2.setText(str );
             }
         }
         return v;

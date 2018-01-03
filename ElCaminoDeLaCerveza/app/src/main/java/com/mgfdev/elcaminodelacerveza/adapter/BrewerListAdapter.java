@@ -2,16 +2,10 @@ package com.mgfdev.elcaminodelacerveza.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.media.Image;
-import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,14 +13,11 @@ import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.activities.BrewerDetail;
 import com.mgfdev.elcaminodelacerveza.activities.DownloadImageTask;
 import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
-import com.mgfdev.elcaminodelacerveza.dto.Brewer;
-import com.mgfdev.elcaminodelacerveza.helpers.DateHelper;
 import com.mgfdev.elcaminodelacerveza.services.MemoryCache;
 import com.squareup.picasso.Picasso;
 
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.InputStream;
 import java.util.List;
 
 /**

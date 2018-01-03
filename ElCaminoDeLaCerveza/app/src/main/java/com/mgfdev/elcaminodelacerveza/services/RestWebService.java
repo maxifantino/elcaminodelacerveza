@@ -4,8 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,12 +51,12 @@ public class RestWebService {
     }
 
     public String doPost (String url, Map<String, String> parameters) throws IOException{
-        String postParams =( parameters!= null && !parameters.isEmpty()) ? "?" + restHelper.buildQueryString(parameters): "";
+        String postParams =( parameters!= null && !parameters.isEmpty()) ? "?" + this.getPostDataString(parameters): "";
         return executePost(url, postParams, null);
     }
 
     public String doPost (String url, Map<String, String> parameters, Map<String,String> authParams) throws IOException{
-        String postParams =( parameters!= null && !parameters.isEmpty()) ? "?" + restHelper.buildQueryString(parameters): "";
+        String postParams =( parameters!= null && !parameters.isEmpty()) ? "?" + this.getPostDataString(parameters): "";
         return executePost(url, postParams, authParams);
     }
 
@@ -92,6 +94,23 @@ public class RestWebService {
         return getResult;
     }
 
+    public String getPostDataString(Map<String, String> params) throws UnsupportedEncodingException{
+        StringBuilder result = new StringBuilder();
+        boolean first = true;
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            if (first)
+                first = false;
+            else
+                result.append("&");
+
+            result.append(URLEncoder.encode(entry.getKey(), "UTF-8"));
+            result.append("=");
+            result.append(URLEncoder.encode(entry.getValue(), "UTF-8"));
+        }
+
+        return result.toString();
+    }
+
     private String executePost(String url, String parameters, Map<String, String> authenticationHeader) throws IOException { //If you want to use get method to hit server
         URL urlObject = new URL(url);
         String postResponse = "";
@@ -108,6 +127,7 @@ public class RestWebService {
             connection.addRequestProperty("Authorization", "Basic " + baseAuthStr);
             connection.addRequestProperty("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
         }
+
 
         OutputStream os = connection.getOutputStream();
         os.write(parameters.getBytes());

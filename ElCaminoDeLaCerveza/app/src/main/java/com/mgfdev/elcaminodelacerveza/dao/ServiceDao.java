@@ -1,8 +1,10 @@
 package com.mgfdev.elcaminodelacerveza.dao;
 
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import android.content.ContentValues;
@@ -12,6 +14,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import com.mgfdev.elcaminodelacerveza.dto.Passport;
+import com.mgfdev.elcaminodelacerveza.dto.PassportItem;
+import com.mgfdev.elcaminodelacerveza.dto.PassportItemDto;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.DateHelper;
 
@@ -25,7 +29,7 @@ public class ServiceDao {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor mCursor = null;
        try{
-		    mCursor = db.query(true, "USERS",new String[]{"user_id", "username", "password"},"current_user='y'",
+		    mCursor = db.query(true, "USERS",new String[]{"user_id", "username", "email", "password"},"current_user='y'",
 				   null,
 				   null,
 				   null,
@@ -40,7 +44,8 @@ public class ServiceDao {
             user = new User();
             user.setId(mCursor.getInt(0));
             user.setUsername(mCursor.getString(1));
-            user.setPassword(mCursor.getString(2));
+			user.setEmail(mCursor.getString(2));
+            user.setPassword(mCursor.getString(3));
         }
 
         dbHelper.close();
@@ -139,6 +144,7 @@ public class ServiceDao {
         ContentValues newRow = new ContentValues();
 		newRow.put("username", user.getUsername());
 		newRow.put("password", user.getPassword());
+		newRow.put("email", user.getEmail());
         newRow.put("current_user", "y");
 
         db.insert("USERS", null, newRow);
@@ -146,38 +152,107 @@ public class ServiceDao {
 		dbHelper.close();
 	}
 
-	public void savePassportItem (Context ctx, int userId, String brewerName)
+	public Long savePassportItem (Context ctx, int userId, String brewerName)
 	{
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues newRow = new ContentValues();
 		newRow.put("user_id", userId);
 		newRow.put("brewer", brewerName);
+		newRow.put("sincronized", "n");
 		newRow.put("date_created", DateHelper.getDate(new Date()));
-		db.insert("PASSPORT", null, newRow);
+		Long passportId = db.insert("PASSPORT", null, newRow);
+		db.close();
+		dbHelper.close();
+		return passportId;
+	}
+
+	public void sincronyzePassportItem (Context ctx, int passportId)
+	{
+		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		// update old users
+		Cursor mCursor = null;
+		try{
+			mCursor = db.rawQuery(" UPDATE PASSPORT  set sincronized = 'y' where sincronized= 'n' and id=" + passportId,null) ;
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
 		db.close();
 		dbHelper.close();
 	}
 
-	public Passport getPassport (Context ctx, int userId){
-		Passport passport = new Passport();
+	public List<PassportItemDto> getDesyncronizedItems (Context ctx, String username)
+	{
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
-		Cursor mCursor = db.query(true, "PASSPORT",new String[]{"brewer", "date_created"},"user_id="+ userId,
+		Cursor mCursor = null;
+		List<PassportItemDto> items = new ArrayList<PassportItemDto>();
+		try{
+			mCursor = db.query(true, "PASSPORT",new String[]{"id, user_id, brewer, sincronized, date_created"}," sincronized= 'n' && username="+ "'" + username + "'",
+					null,
+					null,
+					null,
+					null,
+					null);
+			while (mCursor!= null && mCursor.getCount() > 0 && mCursor.moveToNext()){
+				PassportItemDto item = new PassportItemDto();
+				item.setPassportItem(mCursor.getInt(0));
+				item.setBrewerName(mCursor.getString(2));
+				item.setUserId(mCursor.getInt(1));
+				item.setSincronized(mCursor.getString(3));
+				item.setVisitDate(DateHelper.getDate(mCursor.getString(4)));
+
+				items.add(item);
+			}
+		}
+		catch (Exception e) {
+			Log.e("serviceDao", "Error getting user " + e.getMessage());
+		}
+		dbHelper.close();
+		db.close();
+		if (mCursor !=null) {
+			mCursor.close();
+		}
+		return items;
+	}
+
+
+	public void sincronyzePassport (Context ctx, int userId)
+	{
+		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
+		SQLiteDatabase db = dbHelper.getWritableDatabase();
+		// update old users
+		Cursor mCursor = null;
+		try{
+			mCursor = db.rawQuery(" UPDATE PASSPORT  set sincronized = 'y' where sincronized= 'n' and user_id=" + userId,null) ;
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		db.close();
+		dbHelper.close();
+	}
+
+
+	public Passport getPassport (Context ctx, int userId){
+		Passport passport =  new Passport();
+		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
+		SQLiteDatabase db = dbHelper.getReadableDatabase();
+		Cursor mCursor = db.query(false, "PASSPORT",new String[]{"brewer", "date_created"},"user_id="+ userId,
 				null,
 				null,
 				null,
 				null,
 				null);
-		Map <String, Date> brewers = new HashMap <String, Date>();
 		while (mCursor!= null && mCursor.getCount() > 0 && mCursor.moveToNext()){
-			brewers.put(mCursor.getString(0), DateHelper.getDate(mCursor.getString(1)));
+			passport.addBrewer(mCursor.getString(0), DateHelper.getDate(mCursor.getString(1)));
 		}
 
 		dbHelper.close();
 		db.close();
 		mCursor.close();
-		passport.setBrewers(brewers);
 		return passport;
 	}
 }

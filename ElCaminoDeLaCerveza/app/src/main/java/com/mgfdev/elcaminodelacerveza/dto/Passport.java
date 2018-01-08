@@ -27,7 +27,7 @@ public class Passport {
     public void addBrewer(String brewer, Date dt) {
         PassportItem item = findItemBy(brewer);
         if (item == null){
-            item = new PassportItem(brewer, new Date());
+            item = new PassportItem(brewer, dt);
             brewers.add(item);
         }
         else{

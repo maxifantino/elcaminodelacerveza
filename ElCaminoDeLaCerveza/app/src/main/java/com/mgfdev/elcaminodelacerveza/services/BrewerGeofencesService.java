@@ -45,6 +45,11 @@ public class BrewerGeofencesService {
     private List<BrewerInfo> brewers;
     private static BrewerGeofencesService instance;
     private GeofencingClient mGeofencingClient;
+    private boolean  geofenceActive = false;
+
+    public boolean isGeofenceActive(){
+        return geofenceActive;
+    }
 
     public static BrewerGeofencesService getInstance(Activity ctx,  List<BrewerInfo> brewers){
         if (instance == null){
@@ -89,6 +94,7 @@ public class BrewerGeofencesService {
     private class GeofenceSuccessListener implements OnSuccessListener<Void>{
         @Override
         public void onSuccess (Void aVoid){
+            geofenceActive = true;
             Log.i(getClass().getSimpleName(), "Geofences Successfully connected and added");
         }
     }

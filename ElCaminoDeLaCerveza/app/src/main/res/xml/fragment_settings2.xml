@@ -12,6 +12,7 @@
             android:id="@+id/btnLocationPreference"
             android:key="location"
             android:maxLines="4"
+            android:textSize="10sp"
             android:lines="2"
             android:title="@string/location_description" />
     </PreferenceCategory>
@@ -50,5 +51,15 @@
             android:title="@string/session_description" />
     </PreferenceCategory>
 
+    <PreferenceCategory android:title="@string/sincronize_title"
+        >
+        <com.mgfdev.elcaminodelacerveza.adapter.CustomSwitchPreference
+            android:defaultValue="true"
+            android:key="sincronize"
+            android:id="@+id/btnSincronize"
+            android:maxLines="4"
+            android:lines="2"
+            android:title="@string/sincronize_desc" />
+    </PreferenceCategory>
 
 </PreferenceScreen>

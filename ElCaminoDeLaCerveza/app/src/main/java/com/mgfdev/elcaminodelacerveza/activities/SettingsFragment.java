@@ -16,19 +16,24 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mgfdev.elcaminodelacerveza.R;
 import com.mgfdev.elcaminodelacerveza.adapter.CustomSwitchPreference;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
 import com.mgfdev.elcaminodelacerveza.helpers.GeofencesConstants;
+import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
 import com.mgfdev.elcaminodelacerveza.services.SharedPreferenceManager;
+import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,6 +60,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
     private SharedPreferenceManager sharedPreferences;
     private HomeActivity activity;
     private SwitchPreferenceCompat locationButton;
+    private SwitchPreferenceCompat sincronizeButton;
+
     private View rootView;
     private boolean refreshGeofences = false;
     public SettingsFragment() {
@@ -99,7 +106,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-
+        if(view != null) {
+            ListView lv = (ListView) view.findViewById(android.R.id.list);
+      //      lv.setPadding (0, 0, 0, 0);
+        }
         view.setBackgroundColor(getResources().getColor(R.color.preferenceBackground,null));
         setupLayoutViews(view);
         // TODO: VER porque no actualiza sharedPreferences... Fuerzo actualizacion
@@ -121,6 +131,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
     private void setupSwitchButtons(View rootView,  Map<String, String> config){
         locationButton = (SwitchPreferenceCompat) findPreference("location");
         locationButton.setChecked(Boolean.parseBoolean(SharedPreferenceManager.getInstance(ctx).getStringValue("location")));
+        sincronizeButton = (SwitchPreferenceCompat) findPreference("sincronize");
         setLocationLayoutState (locationButton.isChecked());
         activity.attachSettingsObserver(this);
         locationButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
@@ -131,8 +142,38 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Custom
                 return true;
             }
         });
+        sincronizeButton.setChecked(false);
+        sincronizeButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+            @Override
+            public boolean onPreferenceClick(Preference preference) {
+                sincronizeButton.setChecked(true);
+                postPassportUpdateAsync();
+                return true;
+            }
+        });
+
     }
 
+
+    private void postPassportUpdateAsync(){
+        new Thread(new Runnable() {
+            public void run() {
+                WordpressApiService apiService = new WordpressApiService();
+                boolean result = apiService.postPassportNewsManual(ctx,user.getUsername(), user.getId());
+                final String message = result ? ctx.getString(R.string.sincronize_okMessage) : ctx.getString(R.string.sincronize_failedMessage);
+
+                    activity.runOnUiThread(new Runnable() {
+                        public void run() {
+
+                            sincronizeButton.setChecked(false);
+                            Toast.makeText(ctx, message, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+
+            }
+        }).start();
+    }
 
     public void enableLocationFrame (boolean enabled){
         setLocationLayoutState(enabled);

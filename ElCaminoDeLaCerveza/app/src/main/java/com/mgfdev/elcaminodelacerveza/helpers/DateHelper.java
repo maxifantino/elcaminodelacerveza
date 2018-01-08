@@ -31,4 +31,16 @@ public class DateHelper {
     public static String getDateWordpress (Date dt){
         return dtwordpressFormat.format(dt);
     }
+
+    public static Date getDateWordpress (String stringDate){
+        Date dt;
+        try {
+            dt = dtwordpressFormat.parse(stringDate);
+        }
+        catch (Exception e) {
+            dt = new Date();
+        }
+        return dt;
+    }
+
 }

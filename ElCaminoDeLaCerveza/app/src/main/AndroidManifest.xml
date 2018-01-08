@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mgfdev.elcaminodelacerveza">
 
-    <receiver android:name=".LocalizationUpdateReceiver">
-        <intent-filter>
-            <action android:name="com.mgfdev.elcaminodelacerveza.services.ProximityAlert" />
-        </intent-filter>
-    </receiver>
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />

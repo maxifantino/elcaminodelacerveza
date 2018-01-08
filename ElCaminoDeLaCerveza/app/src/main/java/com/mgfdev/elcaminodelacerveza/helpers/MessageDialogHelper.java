@@ -70,6 +70,19 @@ public class MessageDialogHelper {
     }
 
 
+    public static void showInfoMessage(final Context ctx, String title, String description, String yesText,
+                                       final CustomCommand callbackYes) {
+        AlertDialog.Builder dlgAlert = new AlertDialog.Builder(ctx);
+        dlgAlert.setMessage(description);
+        dlgAlert.setTitle(title);
+        dlgAlert.setPositiveButton(yesText, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                callbackYes.execute();
+            }
+        });
+        dlgAlert.setCancelable(true);
+        dlgAlert.create().show();
+    }
 
 
 }

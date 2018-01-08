@@ -147,34 +147,52 @@ public class ServiceDao {
 		newRow.put("email", user.getEmail());
         newRow.put("current_user", "y");
 
-        db.insert("USERS", null, newRow);
+        Long userID = db.insert("USERS", null, newRow);
+		user.setId(userID.intValue());
 		db.close();
 		dbHelper.close();
 	}
 
-	public Long savePassportItem (Context ctx, int userId, String brewerName)
+	public void savePassport (Context ctx, int userId, Passport passport){
+		for (PassportItem item: passport.getBrewers()) {
+			Integer count = item.getVisitsCount();
+			// como solo importa la ultima fecha, directamente inserto todas las ocurrencias con la misma.
+			// el valor real se encuentra en el server
+			while (count >= 1){
+				Long passportId = this.savePassportItem(ctx, userId, item.getBrewerName(), item.getLastVisit());
+				sincronyzePassportItem(ctx,passportId);
+				count --;
+			}
+		}
+	}
+
+	public Long savePassportItem (Context ctx, int userId, String brewerName, Date dateVisit)
 	{
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
 		ContentValues newRow = new ContentValues();
+		dateVisit = dateVisit == null?new Date(): dateVisit;
 		newRow.put("user_id", userId);
 		newRow.put("brewer", brewerName);
 		newRow.put("sincronized", "n");
-		newRow.put("date_created", DateHelper.getDate(new Date()));
+		newRow.put("date_created",  DateHelper.getDate(dateVisit));
 		Long passportId = db.insert("PASSPORT", null, newRow);
 		db.close();
 		dbHelper.close();
 		return passportId;
 	}
 
-	public void sincronyzePassportItem (Context ctx, int passportId)
+	public void sincronyzePassportItem (Context ctx, long passportId)
 	{
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getWritableDatabase();
-		// update old users
-		Cursor mCursor = null;
 		try{
-			mCursor = db.rawQuery(" UPDATE PASSPORT  set sincronized = 'y' where sincronized= 'n' and id=" + passportId,null) ;
+			ContentValues values = new ContentValues();
+			values.put("sincronized", "y");
+			String[] whereArgs = {String.valueOf(passportId)};
+
+			db.update("PASSPORT", values, "id = ?", whereArgs);
+
 		}
 		catch (Exception e){
 			e.printStackTrace();
@@ -183,14 +201,14 @@ public class ServiceDao {
 		dbHelper.close();
 	}
 
-	public List<PassportItemDto> getDesyncronizedItems (Context ctx, String username)
+	public List<PassportItemDto> getDesyncronizedItems (Context ctx, int userId)
 	{
 		DataBaseHelper dbHelper = new DataBaseHelper(ctx);
 		SQLiteDatabase db = dbHelper.getReadableDatabase();
 		Cursor mCursor = null;
 		List<PassportItemDto> items = new ArrayList<PassportItemDto>();
 		try{
-			mCursor = db.query(true, "PASSPORT",new String[]{"id, user_id, brewer, sincronized, date_created"}," sincronized= 'n' && username="+ "'" + username + "'",
+			mCursor = db.query(true, "PASSPORT",new String[]{"id, user_id, brewer, sincronized, date_created"}," sincronized= 'n' and user_id=" + userId ,
 					null,
 					null,
 					null,
@@ -202,7 +220,7 @@ public class ServiceDao {
 				item.setBrewerName(mCursor.getString(2));
 				item.setUserId(mCursor.getInt(1));
 				item.setSincronized(mCursor.getString(3));
-				item.setVisitDate(DateHelper.getDate(mCursor.getString(4)));
+				item.setDateVisit(mCursor.getString(4));
 
 				items.add(item);
 			}

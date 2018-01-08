@@ -85,8 +85,9 @@ public class WordpressApiService {
             try {
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("username", nickname);
+                params.put("visitdate", DateHelper.getDateWordpress(createdDate));
+
                         params.put("brewer", brewerName);
-                params.put("date", DateHelper.getDateWordpress(createdDate));
                 String saveResult = restService.doPost(PASSPORT_POST, params);
                 result = "200".equals(saveResult);
                 success = true;
@@ -96,7 +97,7 @@ public class WordpressApiService {
                 Log.e("postPassportNews", "SocketException . Error while saving passport " + e.getMessage());
             }
             catch (Exception e){
-                success = true;
+                resultCount++;
                 Log.e("postPassportNews", "SocketException . Error while saving passport " + e.getMessage());
             }
         }
@@ -111,9 +112,9 @@ public class WordpressApiService {
         return params;
     }
 
-    public boolean postPassportNewsManual (Context context, String username){
+    public boolean postPassportNewsManual (Context context, String username, int userId){
         ServiceDao dao = new ServiceDao();
-        List<PassportItemDto> desincronizedIds = dao.getDesyncronizedItems(context, username);
+        List<PassportItemDto> desincronizedIds = dao.getDesyncronizedItems(context, userId);
         boolean finalResult = true;
 
         if (desincronizedIds == null || desincronizedIds!= null && desincronizedIds.size() == 0){
@@ -121,7 +122,7 @@ public class WordpressApiService {
         }
 
         for (PassportItemDto item: desincronizedIds) {
-            boolean result = this.postPassportNews(username,item.getBrewerName(), item.getVisitDate());
+            boolean result = this.postPassportNews(username,item.getBrewerName(), DateHelper.getDateWordpress(item.getDateVisit()));
             finalResult = finalResult && true;
             if (result){
                 dao.sincronyzePassportItem(context, item.getPassportItem());

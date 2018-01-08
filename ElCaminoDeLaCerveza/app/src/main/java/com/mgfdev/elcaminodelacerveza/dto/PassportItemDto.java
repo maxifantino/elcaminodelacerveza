@@ -10,9 +10,19 @@ public class PassportItemDto {
 
     private Integer userId;
     private String brewerName;
-    private Date visitDate;
+    private String username;
+
+    private String dateVisit;
     private Integer passportItemId;
     private String sincronized;
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
     public String getSincronized() {
         return sincronized;
@@ -38,12 +48,12 @@ public class PassportItemDto {
         this.brewerName = brewerName;
     }
 
-    public Date getVisitDate() {
-        return visitDate;
+    public String getDateVisit() {
+        return dateVisit;
     }
 
-    public void setVisitDate(Date visitDate) {
-        this.visitDate = visitDate;
+    public void setDateVisit(String dateVisit) {
+        this.dateVisit = dateVisit;
     }
 
     public Integer getPassportItem() {

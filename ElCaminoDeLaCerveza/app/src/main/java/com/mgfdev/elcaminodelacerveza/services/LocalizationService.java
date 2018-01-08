@@ -101,7 +101,7 @@ public class LocalizationService {
                 (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED);
         result = hasAccess ?  locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) :  null;
-        if (result == null){
+        if (hasAccess && result == null){
             result =  locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
         }
         /*if (result == null){
@@ -109,7 +109,7 @@ public class LocalizationService {
         }*/
         return result ;
     }
-
+/*
     public Location getCurrentLocation() {
         long MIN_TIME_BW_UPDATES = 10000;
         float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10000;
@@ -140,7 +140,6 @@ public class LocalizationService {
         }
         return result;
     }
-
     private Location getLocation (String provider, Long mins, float meters){
         Location result = null;
         boolean hasAccess = (ActivityCompat.checkSelfPermission(this.ctx, Manifest.permission.ACCESS_FINE_LOCATION) ==
@@ -157,10 +156,10 @@ public class LocalizationService {
                 result = locationManager
                         .getLastKnownLocation(provider);
             }
-        }*/
+        }
         return result;
     }
-
+*/
     public boolean nearby (Location currentLocation, Location destLocation, Integer tolerance){
         Float distance = currentLocation.distanceTo(destLocation);
         return (distance.intValue() < tolerance);
@@ -188,46 +187,6 @@ public class LocalizationService {
         location.setLatitude(latitude);
         location.setLongitude(longitude);
         return location;
-    }
-
-
-    private void populateProximityAlerts(CacheManagerHelper cacheBrewers) {
-        List<BrewerInfo> brewerInfos = cacheBrewers.getBrewers();
-        int meters = Integer.valueOf(StringUtils.defaultString(SharedPreferenceManager.getInstance(ctx).getStringValue("meters"), Integer.toString(GeofencesConstants.GEOFENCE_RADIUS_IN_METERS)));
-        for (BrewerInfo item : brewerInfos) {
-            Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
-            intent.putExtra("brewer", item.getBrewery());
-            intent.putExtra("address", item.getAddress());
-            intent.putExtra("brewerUrl",buildGMapsIntentExtra(item.getLatitude(),item.getLongitude()));
-
-            PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
-            try {
-                    locationManager.addProximityAlert(item.getLatitude(),
-                            item.getLongitude(), meters, -1, pendingIntent);
-            } catch (SecurityException e) {
-                e.printStackTrace();
-            }
-        }
-        if (ActivityCompat.checkSelfPermission(this.ctx, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        Intent intent = new Intent(ACTION_PROXIMITY_ALERT);
-        intent.putExtra("brewer", "Lallal");
-        PendingIntent pendingIntent = PendingIntent.getService(ctx, 0, intent, 0);
-        //printDumy
-        BrewerInfo item = brewerInfos.get(0);
-        createNotification(ctx, item.getBrewery(),buildGMapsIntentExtra(item.getLatitude(), item.getLongitude()), item.getAddress());
-
-         //end printDumy
-        locationManager.addProximityAlert(-34.790254, //item.getLatitude(),
-                -58.4028293 /*item.getLongitude()*/, GeofencesConstants.GEOFENCE_RADIUS_IN_METERS, -1, pendingIntent);
     }
 
     private String buildGMapsIntentExtra(Double latitude, Double longitude){

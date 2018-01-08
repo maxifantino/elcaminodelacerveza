@@ -51,12 +51,12 @@ public class RestWebService {
     }
 
     public String doPost (String url, Map<String, String> parameters) throws IOException{
-        String postParams =( parameters!= null && !parameters.isEmpty()) ? "?" + this.getPostDataString(parameters): "";
+        String postParams =( parameters!= null && !parameters.isEmpty()) ? this.getPostDataString(parameters): "";
         return executePost(url, postParams, null);
     }
 
     public String doPost (String url, Map<String, String> parameters, Map<String,String> authParams) throws IOException{
-        String postParams =( parameters!= null && !parameters.isEmpty()) ? "?" + this.getPostDataString(parameters): "";
+        String postParams =( parameters!= null && !parameters.isEmpty()) ? this.getPostDataString(parameters): "";
         return executePost(url, postParams, authParams);
     }
 

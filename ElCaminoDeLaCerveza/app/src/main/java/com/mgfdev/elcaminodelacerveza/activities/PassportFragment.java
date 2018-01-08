@@ -27,6 +27,7 @@ import com.mgfdev.elcaminodelacerveza.dto.PassportItem;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.AppConstants;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
+import com.mgfdev.elcaminodelacerveza.helpers.DateHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.helpers.MessageDialogHelper;
 import com.mgfdev.elcaminodelacerveza.provider.IntentIntegrator;
@@ -126,19 +127,18 @@ public class PassportFragment extends CustomFragment{
                     .showErrorMessage(activity, getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_couldnt_find_location), brewerResult));
             return ;
         }
- /*       if (passport.wasRegisteredToday(brewerResult)){
+        if (passport.wasRegisteredToday(brewerResult)){
             MessageDialogHelper
                     .showErrorMessage(activity, getString(R.string.brewer_not_found_title), MessageFormat.format(getString(R.string.brewer_already_registered_today), brewerResult));
             return ;
 
         }
-   */     BrewerInfo breweInfo = CacheManagerHelper.getInstance().getBrewerById(brewerResult);
+        BrewerInfo breweInfo = CacheManagerHelper.getInstance().getBrewerById(brewerResult);
         if (locationService.nearby(locationService.locationFactory(breweInfo.getLatitude(), breweInfo.getLongitude()),
         lastLocation, AppConstants.PASSPORT_LOCATION_TOLERANCE)){
             addBrewerToPassport(brewerResult);
             customAdapter.notifyDataSetChanged();
             postPassportUpdateAsync(brewerResult);
-
         }
         else{
             MessageDialogHelper
@@ -154,7 +154,7 @@ public class PassportFragment extends CustomFragment{
         checkPassport();
         passport.addBrewer(brewer);
         ServiceDao dao = new ServiceDao();
-        long passportId = dao.savePassportItem(ctx, user.getId(), brewer);
+        long passportId = dao.savePassportItem(ctx, user.getId(), brewer, null);
 
       //  customAdapter.add(new PassportItem(brewer, new Date()));
         customAdapter.notifyDataSetChanged();

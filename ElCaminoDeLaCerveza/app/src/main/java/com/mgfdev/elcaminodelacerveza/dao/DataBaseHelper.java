@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class DataBaseHelper extends SQLiteOpenHelper{
 
-	private static final String dbname = "caminodb_new2.DB";
+	private static final String dbname = "elcaminodb_ne.DB";
 
 	public DataBaseHelper (Context context)
 	{

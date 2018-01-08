@@ -56,6 +56,7 @@ public class LoginModule {
 
     public void markUserAsLogged(Integer id){
         ServiceDao serviceDao = new ServiceDao();
+        user.setId(id);
         try{
             serviceDao.markUserAsLogged(context, id);
         }

@@ -1,5 +1,6 @@
 package com.mgfdev.elcaminodelacerveza.activities;
 
+import android.Manifest;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
@@ -9,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.ContentResolver;
@@ -38,10 +40,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.mgfdev.elcaminodelacerveza.R;
+import com.mgfdev.elcaminodelacerveza.dao.ServiceDao;
+import com.mgfdev.elcaminodelacerveza.dto.Passport;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.FontHelper;
 import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.LoginModule;
+import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
 import static android.Manifest.permission.READ_CONTACTS;
 
@@ -346,6 +351,10 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // TODO: attempt authentication against a network service.
             boolean result = false;
             try {
+                boolean askaccess =  (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED) ||
+                        (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                                PackageManager.PERMISSION_GRANTED);
                 result = loginModule.execute(mEmail, mPassword );
             } catch (Exception e) {
                 result =  false;
@@ -353,13 +362,21 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
             // save credentials
             if (result ) {
                 User user = loginModule.getLoggedUser();
-                if (loginModule.isInDB(user.getUsername()) == null) {
+                User dbUser = loginModule.isInDB(user.getUsername());
+                if (dbUser == null) {
+                    /// hook para el caso en donde el pasaporte debe popularse de internet.
+                    WordpressApiService wpService = new WordpressApiService();
+                    Passport passport = wpService.getPassportFromServer(user.getUsername(), user.getPassword());
+                    ServiceDao serviceDao = new ServiceDao();
                     loginModule.saveInDb();
+                    serviceDao.savePassport(context, user.getId(), passport);
+
                 }
                 else{
-                    loginModule.markUserAsLogged(user.getId());
-                    /// hook para el caso en donde el pasaporte debe popularse de internet.
-                    
+                    loginModule.markUserAsLogged(dbUser.getId());
+                    WordpressApiService wpService = new WordpressApiService();
+           //         Passport passport = wpService.getPassportFromServer(user.getUsername(), user.getPassword());
+         //           user.setPassport(passport);
                 }
             }
             return result;

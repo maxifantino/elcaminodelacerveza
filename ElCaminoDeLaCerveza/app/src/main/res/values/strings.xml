@@ -12,7 +12,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="brewer_not_found_title">Atención</string>
     <string name="brewer_not_found_message">La cervecería {0} no está suscripta al camino de la cerveza</string>
-    <string name="brewer_not_location_message">Debes estar en el local, para poder registrar tu visita en {0}</string>
+    <string name="brewer_not_location_message">Para poder registrar tu visita en {0}, debes encontrarte en el local</string>
     <string name="brewer_already_registered_today">Ya registraste una visita en {0} para el día de la fecha. Espera hasta mañana.</string>
     <string name="brewer_couldnt_find_location">En este momento no podemos obtener tu ubicación. Prueba nuevamente o reiniciando el celular. Si el problema persiste sella tu pasaporte impreso.</string>
     <string name="cant_syncronize_passport">No se pudo sincronizar el pasaporte con el servidor. No te preocupes, puedes hacerlo manualmente con el botón sincronizar</string>
@@ -97,11 +97,15 @@
     <string name="location_title">Ubicacion</string>
     <string name="location_description">Permite recibir notificaciones en caso de estar cerca de una cervecería</string>
     <string name="location_meters">Radio</string>
-    <string name="location_meters_description">Distancia en Metros</string>
+    <string name="location_meters_description">Distancia en metros</string>
     <string name="location_time">Intervalo</string>
-    <string name="location_time_description">Tiempo en horas en el cual recibiras las notificaciones</string>
+    <string name="location_time_description">Tiempo en horas en el cual recibirás las notificaciones</string>
     <string name="session_title">Sesión</string>
-    <string name="session_description">Estas registrado como {0}. ¿Cerrar sesion?</string>
+    <string name="sincronize_title">Sincronizar</string>
+    <string name="sincronize_desc">Sincroniza tu pasaporte digital con el servidor.     </string>
+    <string name="sincronize_okMessage"> Tu pasaporte se sincronizó con éxito</string>
+    <string name="sincronize_failedMessage"> No pudimos sincronizar tu pasaporte. Verifica que tengas acceso a internet e intenta mas tarde</string>
+    <string name="session_description">Estás registrado como "{0}". ¿Cerrar sesion?</string>
     <string name="no_session_description">No hay usuario Registrado</string>
     <string name="close_session">Sesión</string>
     <string name="app_description">El camino de la cerveza</string>
@@ -115,7 +119,7 @@
     <string name="yes"> Si</string>
     <string name="no">No</string>
     <string name="activateLocationTitle">Activar localizacion</string>
-    <string name="activateLocationDescription">Para poder recibir notificaciones de cervecerias cercanas, precisas activar los servicios de ubicación.</string>
+    <string name="activateLocationDescription">Precisás activar los servicios de ubicación, para poder recibir notificaciones de cervecerias cercanas.</string>
     <string name="activate">Activar</string>
     <string name="exitMessage">Deseas salir de la aplicación?</string>
     <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
@@ -129,4 +133,5 @@
     <string name="direccion">Dirección:</string>
     <string name="passport_title_message">Escanea las cervecerías para completar tu pasaporte digital.</string>
     <string name="telefono">Teléfono:</string>
+
 </resources>

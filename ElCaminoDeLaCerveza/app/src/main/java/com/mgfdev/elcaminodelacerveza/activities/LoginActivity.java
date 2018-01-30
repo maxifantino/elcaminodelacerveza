@@ -108,8 +108,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
-        TextView loginLinkText = (TextView) findViewById(R.id.loginLinkText);
-        ///loginLinkText.setMovementMethod(LinkMovementMethod.getInstance());
+        TextView loginLinkText2 = (TextView) findViewById(R.id.loginLinkText2);
+        loginLinkText2.setMovementMethod(LinkMovementMethod.getInstance());
 
     }
 

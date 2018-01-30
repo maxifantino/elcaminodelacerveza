@@ -123,6 +123,9 @@
     <string name="activate">Activar</string>
     <string name="exitMessage">Deseas salir de la aplicación?</string>
     <string name="signup_message"> No tenes cuenta? Registrate <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
+    <string name="signup_message1"> No tenes cuenta? Registrate </string>
+    <string name="signup_message2"> <a href="https://www.elcaminodelacerveza.com">aqui</a></string>
+
     <string name="proximity_advice">Te encuentras próximo a la cervecería {0}. \n Se encuentra en {1}. Quieres ir? </string>
     <string name="logintext">Ingresar</string>
     <string name="title_brewers">Locales</string>

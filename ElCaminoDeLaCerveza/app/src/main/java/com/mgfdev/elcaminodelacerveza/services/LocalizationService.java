@@ -11,12 +11,19 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
@@ -44,6 +51,7 @@ public class LocalizationService {
         cacheManager = CacheManagerHelper.getInstance();
     }
     private static CustomLocationListener locationListener;
+    private GoogleApiClient mGoogleApiClient;
 
     public static LocalizationService getInstance(FragmentActivity fragmentActivity) {
         if (instance == null) {
@@ -93,11 +101,62 @@ public class LocalizationService {
 
     }
 
+
+    public void init2(){
+        buildGoogleApiClient();
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(ctx)
+                .addConnectionCallbacks(new FuseLocationCallback())
+                .addOnConnectionFailedListener(new FusedConnectionFailedListener())
+                .addApi(LocationServices.API)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private class FuseLocationCallback implements GoogleApiClient.ConnectionCallbacks, com.google.android.gms.location.LocationListener{
+
+        @Override
+        public void onConnected(@Nullable Bundle bundle) {
+            LocationRequest mLocationRequest = new LocationRequest();
+            mLocationRequest.setInterval(1000);
+            mLocationRequest.setFastestInterval(1000);
+            mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+            if (ContextCompat.checkSelfPermission(ctx,
+                    Manifest.permission.ACCESS_FINE_LOCATION)
+                    == PackageManager.PERMISSION_GRANTED) {
+                LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient,
+                        mLocationRequest, this);
+            }
+        }
+
+        @Override
+        public void onConnectionSuspended(int i) {
+            Log.e("LocalizationService", "connection Suspended");
+        }
+
+        @Override
+        public void onLocationChanged(Location location) {
+            //call mapsActivity!
+        }
+    }
+
+
+
+    private class FusedConnectionFailedListener implements GoogleApiClient.OnConnectionFailedListener{
+        @Override
+        public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+            Log.e("LocalizationService", "connection failed");
+        }
+    }
+
     public Location getLastKnownLocation() {
         Location result = null;
 
         boolean hasAccess = (ActivityCompat.checkSelfPermission(this.ctx, Manifest.permission.ACCESS_FINE_LOCATION) ==
                 PackageManager.PERMISSION_GRANTED) ||
+
                 (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) ==
                         PackageManager.PERMISSION_GRANTED);
         result = hasAccess ?  locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER) :  null;
@@ -109,7 +168,9 @@ public class LocalizationService {
         }*/
         return result ;
     }
-/*
+
+
+    /*
     public Location getCurrentLocation() {
         long MIN_TIME_BW_UPDATES = 10000;
         float MIN_DISTANCE_CHANGE_FOR_UPDATES = 10000;

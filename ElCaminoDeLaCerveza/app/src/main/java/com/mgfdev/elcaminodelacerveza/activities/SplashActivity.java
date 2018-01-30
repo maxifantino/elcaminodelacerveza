@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -42,7 +43,7 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
         Runnable r = new Runnable() {
             @Override
             public void run() {
-                populateCache();
+                askLocationRights();
             }
         };
         r.run();
@@ -51,17 +52,35 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
             AndroidCheckHelper.requestLocationPermission(this);
         }
     }
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        setupapk(false);
+    }
 
-    private void populateCache(){
+
+    private void askLocationRights(){
+        boolean hasAccess = (ActivityCompat.checkSelfPermission(this.ctx, Manifest.permission.ACCESS_FINE_LOCATION) ==
+                PackageManager.PERMISSION_GRANTED) ||
+                (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) ==
+                        PackageManager.PERMISSION_GRANTED);
+
+// hermoso bug de android. Si no esta definido, no lo ejecuta y no evalua el if de abajo.
+        if (hasAccess){
+            setupapk(false);
+        }
+
+    }
+
+    private void setupapk(boolean retry){
         if (ConnectionHelper.isConnected(this)){
             BreweriesAsyncService breweriesAsyncService = new BreweriesAsyncService(this);
             breweriesAsyncService.execute((Void) null);
-            boolean askaccess =  (ActivityCompat.checkSelfPermission(this.ctx, Manifest.permission.ACCESS_FINE_LOCATION) ==
-                    PackageManager.PERMISSION_GRANTED) ||
-                    (ActivityCompat.checkSelfPermission(ctx, Manifest.permission.ACCESS_COARSE_LOCATION) ==
-                            PackageManager.PERMISSION_GRANTED);
         }
-        else{
+        else if (retry){
+            activity.finishAffinity();
+        }
+        else {
             showConnectDialog();
         }
     }
@@ -72,7 +91,7 @@ public class SplashActivity extends AppCompatActivity implements OnPostExecuteIn
         dlgAlert.setTitle("");
         dlgAlert.setPositiveButton(getString(R.string.retry), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-                populateCache();
+                setupapk(true);
             }
         });
 

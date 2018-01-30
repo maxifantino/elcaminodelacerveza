@@ -37,6 +37,8 @@ import com.mgfdev.elcaminodelacerveza.services.LocalizationService;
 import com.mgfdev.elcaminodelacerveza.services.PassportService;
 import com.mgfdev.elcaminodelacerveza.services.WordpressApiService;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.FileNotFoundException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -227,7 +229,7 @@ public class PassportFragment extends CustomFragment{
         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
         if (scanResult != null) {
             // handle scan result
-            processQRResult(scanResult.getContents());
+            processQRResult(StringUtils.defaultString(scanResult.getContents(), ""));
         }
         // else continue with any other code you need in the metho
     }

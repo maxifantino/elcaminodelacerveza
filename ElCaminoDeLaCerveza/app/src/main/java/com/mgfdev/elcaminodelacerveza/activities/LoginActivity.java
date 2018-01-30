@@ -24,6 +24,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -107,6 +108,9 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         mLoginFormView = findViewById(R.id.login_form);
         mProgressView = findViewById(R.id.login_progress);
+        TextView loginLinkText = (TextView) findViewById(R.id.loginLinkText);
+        ///loginLinkText.setMovementMethod(LinkMovementMethod.getInstance());
+
     }
 
     private void populateAutoComplete() {

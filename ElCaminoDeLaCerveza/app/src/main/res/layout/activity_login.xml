@@ -83,6 +83,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="15dp"
+            android:autoLink="web"
+            android:id="@+id/loginLinkText"
+            android:linksClickable="true"
             style="@style/loginSignUpStyle"
             android:text="@string/signup_message"/>
     </LinearLayout>

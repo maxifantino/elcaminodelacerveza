@@ -17,6 +17,9 @@ import com.mgfdev.elcaminodelacerveza.data.BrewerInfo;
 import com.mgfdev.elcaminodelacerveza.dto.User;
 import com.mgfdev.elcaminodelacerveza.helpers.CacheManagerHelper;
 
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.Predicate;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -60,7 +63,12 @@ public class BrewerFragment extends CustomFragment {
         activity = (HomeActivity) getActivity();
         user = activity.getUser();
         brewers = CacheManagerHelper.getInstance().getBrewers();
-
+        CollectionUtils.filter(brewers, new Predicate<BrewerInfo>() {
+            @Override
+            public boolean evaluate(BrewerInfo o) {
+                return !o.isFiltered();
+            }
+        });
     }
 
 

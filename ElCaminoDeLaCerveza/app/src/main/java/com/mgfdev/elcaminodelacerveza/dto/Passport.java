@@ -1,5 +1,7 @@
 package com.mgfdev.elcaminodelacerveza.dto;
 
+import com.mgfdev.elcaminodelacerveza.helpers.DateHelper;
+
 import org.apache.commons.lang3.time.DateUtils;
 
 import java.util.ArrayList;
@@ -63,7 +65,7 @@ public class Passport {
 
     public boolean wasRegisteredToday(String brewerName) {
         for (PassportItem item : brewers) {
-            if (brewerName.equalsIgnoreCase(item.getBrewerName()) && DateUtils.isSameDay(item.getLastVisit(), new Date())) {
+            if (brewerName.equalsIgnoreCase(item.getBrewerName()) && DateHelper.isSameWorkingDay(item.getLastVisit())) {
                 return true;
             }
         }

@@ -19,6 +19,19 @@ public class BrewerInfo implements Serializable{
     private String content;
     private String detailImages;
 
+    public boolean isFiltered() {
+        return filtered;
+    }
+
+    public boolean getFiltered() {
+        return filtered;
+    }
+    public void setFiltered(boolean filtered) {
+        this.filtered = filtered;
+    }
+
+    private boolean filtered;
+
     public BrewerInfo(){
         brewery = "";
         address = "";
